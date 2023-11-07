@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 여기는 mapper 역할을 하는 xml로 mapper와 연동되야 하는 inderface의 풀 패키지명 + 인터페이스명을 namespace로 작성해야 함 -->
+<mapper namespace="com.petnolja.semi.member.regist.model.dao.MemberDAO">
+
+	<!-- member 관련하여 SELECT 할 경우 반환 자료형으로 사용할 수 있도록 resultMap 생성(JAVA의 DTO 속성과 DB의 테이블 속성을 맞춰주는 작업) -->
+	<resultMap type="com.petnolja.semi.member.common.dto.MemberDTO" id="memberResultMap">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="memberPwd" column="MEMBER_PWD" />
+		<result property="memberName" column="MEMBER_NAME" />
+		<result property="memberBirth" column="MEMBER_BIRTH" />
+		<result property="memberPhone" column="MEMBER_PHONE" />
+		<result property="memberEmail" column="MEMBER_EMAIL" />
+		<result property="memberPoint" column="MEMBER_POINT" />
+		<result property="gradeNo" column="GRADE_NO" />
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.PointAccDTO" id="selectPointAccResultMap">
+		<id property="pointLogNo" column="POINT_LOG_NO"/>
+		<result property="pointLogDate" column="POINT_LOG_DATE"/>
+		<result property="pointLogCheck" column="POINT_LOG_CHECK"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberPoint" column="MEMBER_POINT"/>
+		<result property="pointUse" column="POINT_USE"/>
+	</resultMap>
+	
+	<!-- DML(INSERT, UPDATE, DELETE)의 경우 반환형 작성 XX 오히려 작성할 경우 오류남! SELECT할 경우에만 꼭 잊지말고 반환형(resultType/resultMap) 작성해주기! -->
+	<insert id="registMember" parameterType="com.petnolja.semi.member.common.dto.MemberDTO" >
+		INSERT
+		  INTO MEMBER A
+		(
+		  A.MEMBER_NO
+		, A.MEMBER_ID
+		, A.MEMBER_PWD
+		, A.MEMBER_NAME
+		, A.MEMBER_BIRTH
+		, A.MEMBER_PHONE
+		, A.MEMBER_EMAIL
+		, A.MEMBER_POINT
+		, A.GRADE_NO
+		)
+		VALUES
+		(
+		  SEQ_MEMBER_NO.NEXTVAL
+		, #{ memberId }
+		, #{ memberPwd }
+		, #{ memberName }
+		, #{ memberBirth }
+		, #{ memberPhone }
+		, #{ memberEmail }
+		, 1000
+		, 1
+		)
+	</insert>
+	
+	<!-- resultType은 JAVA에서 미리 알고 있는 기본 자료형! resultMap은 우리가 설정한 자료형(ex_ JAVA의 DTO를 자료형으로 쓰는 경우) -->
+	<!--  하단은 하나의 쿼리로 where절만 조건에 따라 실행되도록 하는 동적쿼리 사용함 -->
+	<select id="selectRegistCheck" parameterType="hashmap" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM MEMBER A
+		<where>
+		<if test="memberId != null">
+			A.MEMBER_ID = #{ memberId }
+		</if>
+		<if test="memberEmail != null">
+			AND A.MEMBER_Email = #{ memberEmail }
+		</if>
+		</where>
+	</select>
+	
+	<select id="selectEncryptedPwd" resultType="string">
+		SELECT
+			   A.MEMBER_PWD
+		  FROM MEMBER A
+		 WHERE A.MEMBER_ID = #{id}
+	</select>
+
+	<select id="selectLogInMember" resultMap="memberResultMap">
+		SELECT
+			   A.MEMBER_NO
+			 , A.MEMBER_ID
+			 , A.MEMBER_PWD
+			 , A.MEMBER_NAME
+			 , A.MEMBER_BIRTH
+			 , A.MEMBER_PHONE
+			 , A.MEMBER_EMAIL
+			 , A.MEMBER_POINT
+			 , A.GRADE_NO
+		  FROM MEMBER A
+		 WHERE A.MEMBER_ID = #{id}
+	</select>
+	
+	<select id="findId" parameterType="com.petnolja.semi.member.common.dto.MemberDTO" resultMap="memberResultMap">
+		SELECT
+			   A.MEMBER_ID 
+		  FROM MEMBER A
+		 WHERE A.MEMBER_NAME = #{memberName}
+		   AND A.MEMBER_EMAIL= #{memberEmail}
+	</select>
+	
+	<select id="selectPointList" parameterType="map" resultMap="selectPointAccResultMap">
+	       SELECT
+                  A.POINT_LOG_DATE
+                , A.POINT_USE 
+                , B.MEMBER_POINT
+             FROM POINT_LOG A
+             JOIN MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+           <where>
+           		<if test="month eq 1">
+           	   		A.POINT_LOG_DATE > SYSDATE-30
+           	   </if>
+           		<if test="month eq 3">
+               		A.POINT_LOG_DATE > SYSDATE-90
+               </if>
+           		<if test="month eq 6">
+               		A.POINT_LOG_DATE > SYSDATE-180
+           		</if>
+           AND A.POINT_LOG_CHECK = 'Y'
+           AND B.MEMBER_NO = #{memberNo}
+         ORDER BY 1 DESC
+           </where>
+	</select>
+	
+	<select id="getparameter" resultMap="selectPointAccResultMap">
+	       SELECT
+                  A.POINT_LOG_DATE
+                , A.POINT_USE 
+                , B.MEMBER_POINT
+             FROM POINT_LOG A
+             JOIN MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+            WHERE A.MEMBER_NO = #{memberNo}
+            ORDER BY 1 DESC
+	</select>
+	
+	<insert id="insertWithdrawMember" parameterType="com.petnolja.semi.member.common.dto.MemberDTO">
+		     INSERT
+		       INTO WITHDRAW_MEMBER
+		     (
+		       WITHDRAW_MEMBER_NO
+		     , WITHDRAW_ID
+		     , WITHDRAW_PWD
+		     , WITHDRAW_NAME
+		     , WITHDRAW_BIRTH
+		     , WITHDRAW_NUMBER
+		     , WITHDRAW_EMAIL
+		     , WITHDRAW_DATE
+		     , GRADE_NO
+		     )
+		     VALUES
+		     (
+		       SEQ_WITHDRAW_MEMBER_NO.NEXTVAL
+		     , #{memberId}
+		     , #{memberPwd}
+		     , #{memberName}
+		     , #{memberBirth}
+		     , #{memberPhone}
+		     , #{memberEmail}
+		     , SYSDATE
+		     , #{gradeNo}
+		    )
+		
+	</insert>
+
+</mapper>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.review.model.dao.ReviewDAO">
+  
+  <resultMap type="com.petnolja.semi.member.common.dto.SelectBestReviewDTO" id="selectBestReviewResultMap">
+  	<result property="reviewNo" column="REVIEW_NO"/>
+  	<result property="memberId" column="MEMBER_ID"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="reviewDate" column="REVIEW_DATE"/>
+  	<result property="userPicSaveRoute" column="USER_PIC_SAVEROUTE"/>
+  </resultMap>
+  
+  <resultMap type="com.petnolja.semi.member.common.dto.SelectAllReviewDTO" id="selectAllReviewResultMap">
+  	<id property="reviewNo" column="REVIEW_NO"/>
+  	<result property="memberId" column="MEMBER_ID"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="memberNo" column="MEMBER_NO"/>
+  </resultMap>
+  
+  <resultMap type="com.petnolja.semi.member.common.dto.ReviewAndUserPictureDTO" id="selectDetailReviewResultMap">
+  	<id property="reviewNo" column="REVIEW_NO"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="memberId" column="MEMBER_ID"/>
+  	<result property="gradeName" column="GRADE_NAME"/>
+  	<result property="reviewDate" column="REVIEW_DATE"/>
+  	<result property="checkIn" column="RESERVATION_CHECKIN"/>
+  	<result property="checkOut" column="RESERVATION_CHECKOUT"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="roomName" column="ROOM_NAME"/>
+  	<result property="empName" column="EMP_NAME"/>
+  	
+  	<collection property="userPictureList" ofType="com.petnolja.semi.member.common.dto.UserPictureDTO">
+  		<id property="picNo" column="USER_PIC_NO"/>
+  		<result property="petNo" column="PET_NO"/>
+  		<result property="reviewNo" column="REVIEW_NO"/>
+  		<result property="picName" column="USER_PIC_NAME"/>
+  		<result property="modifyName" column="USER_PIC_MODIFYNAME"/>
+  		<result property="userPicSaveRoute" column="USER_PIC_SAVEROUTE"/>
+  		<result property="userPicSaveTime" column="USER_PIC_SAVETIME"/>
+  	</collection>
+  </resultMap>
+  
+  
+  
+   <resultMap type="com.petnolja.semi.member.common.dto.UpdateReviewTextDTO" id="updateReviwResultMap">
+  	<id property="reviewNo" column="REVIEW_NO"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="reviewDate" column="REVIEW_DATE"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="reservationNo" column="RESERVATION_NO"/>
+  	<result property="categoryNo" column="CATEGORY_NO"/>
+  	<result property="userPicName" column="USER_PIC_NAME"/>
+  </resultMap> 
+  
+
+  
+  
+  <select id="selectBestReview" resultMap="selectBestReviewResultMap" >
+      SELECT
+             E.REVIEW_NO
+           , E.REVIEW_RATE 
+	       , E.REVIEW_CONTENTS 
+	       , E.REVIEW_DATE 
+	       , E.USER_PIC_SAVEROUTE 
+	       , E.MEMBER_ID
+	    FROM (SELECT ROWNUM
+	               , A.REVIEW_RATE 
+	               , A.REVIEW_CONTENTS
+	               , A.REVIEW_DATE
+	               , A.CATEGORY_NO
+                   , A.REVIEW_NO
+	               , B.USER_PIC_SAVEROUTE 
+	               , D.MEMBER_ID
+	            FROM REVIEW A
+	            LEFT OUTER JOIN USER_PICTURE B ON (A.REVIEW_NO = B.REVIEW_NO)
+	            LEFT OUTER JOIN RESERVATION C ON (A.RESERVATION_NO = C.RESERVATION_NO)
+	            LEFT OUTER JOIN MEMBER D ON (C.USER_NO = D.MEMBER_NO)) E
+	   WHERE E.CATEGORY_NO = 2
+	   ORDER BY 2 DESC, 4 DESC
+  </select>
+  <select id="selectAllReview" resultMap="selectAllReviewResultMap" >
+     SELECT
+            A.REVIEW_NO 
+          , A.REVIEW_CONTENTS
+       	  , A.REVIEW_RATE
+	      , C.MEMBER_ID
+	      , C.MEMBER_NO
+	   FROM REVIEW A
+	   JOIN RESERVATION B ON (A.RESERVATION_NO = B.RESERVATION_NO)
+	   JOIN MEMBER C ON (B.USER_NO = C.MEMBER_NO)
+	  WHERE A.CATEGORY_NO = 2
+	  ORDER BY A.REVIEW_DATE DESC
+  </select>
+  <select id="selectDetailReview" parameterType="string" resultMap="selectDetailReviewResultMap">                         
+  	  SELECT
+	         H.MEMBER_ID
+	       , H.GRADE_NAME
+	       , H.REVIEW_NO
+	       , H.REVIEW_DATE
+	       , H.REVIEW_RATE
+	       , H.REVIEW_CONTENTS
+	       , H.USER_PIC_SAVEROUTE
+	       , H.RESERVATION_CHECKIN
+	       , H.RESERVATION_CHECKOUT
+	       , H.ROOM_NAME
+	       , H.EMP_NAME
+	    FROM (SELECT D.MEMBER_ID
+	               , E.GRADE_NAME
+	               , A.REVIEW_NO
+	               , A.REVIEW_DATE
+	               , A.REVIEW_RATE
+	               , A.REVIEW_CONTENTS
+	               , B.USER_PIC_SAVEROUTE
+	               , C.RESERVATION_CHECKIN
+	               , C.RESERVATION_CHECKOUT
+	               , F.ROOM_NAME
+	               , G.EMP_NAME
+	            FROM REVIEW A
+	            LEFT OUTER JOIN USER_PICTURE B ON(A.REVIEW_NO = B.REVIEW_NO)
+	            LEFT OUTER JOIN RESERVATION C ON(A.RESERVATION_NO = C.RESERVATION_NO)
+	            LEFT OUTER JOIN MEMBER D ON(C.USER_NO = D.MEMBER_NO)
+	            LEFT OUTER JOIN GRADE E ON(D.GRADE_NO = E.GRADE_NO)
+	            LEFT OUTER JOIN ROOM F ON(C.ROOM_NO = F.ROOM_NO)
+	            LEFT OUTER JOIN EMPLOYEE G ON(C.EMP_ID = G.EMP_ID))H
+	      WHERE H.REVIEW_NO = #{reviewNo}
+  </select>
+  <select id="updateReviewForm" parameterType="string" resultMap="updateReviwResultMap">
+      SELECT
+           A.REVIEW_NO
+         , A.REVIEW_CONTENTS
+         , A.REVIEW_RATE
+         , B.USER_PIC_NAME
+      FROM REVIEW A
+      LEFT OUTER JOIN USER_PICTURE B ON (A.REVIEW_NO = B.REVIEW_NO)
+     WHERE A.REVIEW_NO = #{reviewNo}
+  </select>
+  
+  <update id="updateReview" parameterType="map">
+	  UPDATE
+	         REVIEW A
+	     SET A.REVIEW_CONTENTS = #{reviewText}
+	       , A.REVIEW_RATE = #{rating}
+	   WHERE A.REVIEW_NO = #{reviewNo}
+  </update>
+  
+  <select id="selectMemberId" parameterType="string" resultType="_int">
+      SELECT
+             C.MEMBER_NO
+        FROM REVIEW A
+        JOIN RESERVATION B ON (A.RESERVATION_NO = B.RESERVATION_NO)
+        JOIN MEMBER C ON (B.USER_NO = C.MEMBER_NO)
+      WHERE REVIEW_NO = #{reviewNo}
+  </select>
+  
+  <select id="getMemberNo" parameterType="string" resultType="_int">
+      SELECT
+             C.MEMBER_NO
+        FROM REVIEW A
+        JOIN RESERVATION B ON (A.RESERVATION_NO = B.RESERVATION_NO)
+        JOIN MEMBER C ON (B.USER_NO = C.MEMBER_NO)
+      WHERE REVIEW_NO = #{reviewNo}
+  </select>
+
+ 
+
+  
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

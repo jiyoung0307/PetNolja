@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.admin.customer.model.dao.WithdrawMemberSelectDAO">
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.WithdrawMemberDTO" id="withdrawMemberSelectResultMap">
+	<id property="withdrawmemberNo" column="WITHDRAW_MEMBER_NO" />
+	<result property="withdrawId" column="WITHDRAW_ID"/>
+	<result property="withdrawPwd" column="WITHDRAW_PWD"/>
+	<result property="withdrawName" column="WITHDRAW_NAME"/>
+	<result property="withdrawBirth" column="WITHDRAW_BIRTH"/>
+	<result property="withdrawNumber" column="WITHDRAW_NUMBER"/>
+	<result property="withdrawWEmail" column="WITHDRAW_EMAIL"/>
+	<result property="withdrawDate" column="WITHDRAW_DATE"/>
+	</resultMap>
+	
+	<select id="selectwithdrawMember" resultMap="withdrawMemberSelectResultMap">
+	  SELECT
+			 A.WITHDRAW_MEMBER_NO
+		   , A.WITHDRAW_ID
+		   , A.WITHDRAW_PWD
+		   , A.WITHDRAW_NAME
+		   , A.WITHDRAW_BIRTH
+		   , A.WITHDRAW_NUMBER
+	       , A.WITHDRAW_EMAIL
+		   , A.WITHDRAW_DATE
+		   , A.GRADE_NO
+       FROM WITHDRAW_MEMBER A
+	</select>
+</mapper>

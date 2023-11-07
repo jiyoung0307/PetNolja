@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.post.model.dao.QuestionDAO">
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.QuestionDTO" id="questionResultMap">
+		<id property="questionNo" column="QUESTION_NO"/>
+		<result property="questionTitle" column="QUESTION_TITLE"/>
+		<result property="questionContents" column="QUESTION_CONTENTS"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+	</resultMap>
+	
+	<insert id="questionInsert" parameterType="com.petnolja.semi.member.common.dto.QuestionDTO" >
+	    INSERT
+		  INTO QUESTION
+		(
+		  QUESTION_NO
+        , QUESTION_TITLE
+        , QUESTION_CONTENTS
+        , MEMBER_NO
+		)
+		VALUES
+		(
+		SEQ_QUESTION_NO.NEXTVAL
+		, #{questionTitle}
+		, #{questionContents}
+		, #{memberNo}
+		)
+	</insert>
+		
+	<update id="questionUpdate" parameterType="com.petnolja.semi.member.common.dto.QuestionDTO">
+		UPDATE
+		       QUESTION
+	 <set>
+	 <if test="questionTitle != null and questionTitle != ''"></if>
+			   QUESTION_TITLE = #{questionTitle}
+	 <if test="questionContents != null and questionContents != ''"></if>
+			   QUESTION_CONTENTS = #{questionContents}
+     </set>
+		 WHERE QUESTION_NO = #[questionNO}
+	</update>
+		
+	<select id="selectQuestion" parameterType="_int" resultMap="questionResultMap">
+		SELECT
+       	 	   A.QUESTION_NO
+    		 , A.QUESTION_TITLE
+   		     , A.QUESTION_CONTENTS
+   		     , A.MEMBER_NO
+ 		  FROM QUESTION A
+	     WHERE A.MEMBER_NO = #{memberNo}
+	</select>
+</mapper>

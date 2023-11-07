@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.admin.employee.model.dao.AllEmpSelectDAO">
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="selectAllEmpResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="no" column="EMP_NO"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="bonus" column="BONUS"/>
+		<result property="hireDate" column="HIREDATE"/>
+		<result property="leaveDate" column="LEAVEDATE"/>
+		<result property="dropYN" column="DROP_YN"/>
+		<result property="deptCode" column="DEPT_CODE"/>
+		<result property="jopCode" column="JOB_CODE"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="selectAllEmpDetailResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="no" column="EMP_NO"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="bonus" column="BONUS"/>
+		<result property="hireDate" column="HIREDATE"/>
+		<result property="leaveDate" column="LEAVEDATE"/>
+		<result property="dropYN" column="DROP_YN"/>
+		<result property="deptCode" column="DEPT_CODE"/>
+		<result property="jopCode" column="JOB_CODE"/>
+		<result property="jobName" column="JOB_NAME"/>
+		<result property="deptName" column="DEPT_NAME"/>
+	</resultMap>
+
+	<select id="selectAllEmployee" resultMap="selectAllEmpResultMap">
+		SELECT
+			   A.EMP_ID
+			 , A.EMP_NAME
+			 , A.EMP_NO
+			 , A.EMP_EMAIL
+			 , A.EMP_PHONE
+			 , A.SALARY
+			 , A.BONUS
+			 , A.HIREDATE
+			 , A.LEAVEDATE
+			 , A.DROP_YN
+			 , A.DEPT_CODE
+			 , A.JOB_CODE 
+		  FROM EMPLOYEE A
+	</select>
+	
+	<select id="searchList" parameterType="map" resultMap="selectAllEmpResultMap">
+		SELECT
+			   A.EMP_ID
+			 , A.EMP_NAME
+			 , A.EMP_NO
+			 , A.EMP_EMAIL
+			 , A.EMP_PHONE
+			 , A.SALARY
+			 , A.BONUS
+			 , A.HIREDATE
+			 , A.LEAVEDATE
+			 , A.DROP_YN
+			 , A.DEPT_CODE
+			 , A.JOB_CODE 
+		  FROM EMPLOYEE A
+		  <where>
+		  <if test="select == 'id'">
+		  	A.EMP_ID LIKE '%' || #{search} || '%'
+		  </if>
+		  <if test="select == 'name'">
+		  	A.EMP_NAME LIKE '%' || #{search} || '%'
+		  </if>
+		  </where>
+	</select>
+	
+	<select id="allEmployeeDetail" parameterType="string" resultMap="selectAllEmpDetailResultMap">
+		SELECT
+			   A.EMP_ID
+			 , A.EMP_NAME
+			 , A.EMP_NO
+			 , A.EMP_EMAIL
+			 , A.EMP_PHONE
+			 , A.SALARY
+			 , A.BONUS
+			 , A.HIREDATE
+			 , A.LEAVEDATE
+			 , A.DROP_YN
+			 , B.DEPT_NAME
+			 , C.JOB_NAME
+		  FROM EMPLOYEE A
+		  JOIN DEPT B ON (A.DEPT_CODE = B.DEPT_NO)
+		  JOIN JOB C ON (A.JOB_CODE = C.JOB_NO)
+		 WHERE A.EMP_ID = #{empId}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

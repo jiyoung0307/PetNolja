@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.mypage.model.dao.MemberInfoSelectDAO">
+
+	<resultMap type="com.petnolja.semi.member.common.dto.MemberDTO" id="memberInfoSelectResultMap">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="memberPwd" column="MEMBER_PWD" />
+		<result property="memberName" column="MEMBER_NAME" />
+		<result property="memberBirth" column="MEMBER_BIRTH" />
+		<result property="memberPhone" column="MEMBER_PHONE" />
+		<result property="memberEmail" column="MEMBER_EMAIL" />
+		<result property="memberPoint" column="MEMBER_POINT" />
+		<result property="gradeNo" column="GRADE_NO" />
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.MemberCouponDTO" id="memberCouponSelectResultMap">
+		<id property="couponNo" column="COUPON_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberCouponUsed" column="MEMBER_COUPON_USED"/>
+		
+		<association property="coupon">
+		<id property="couponNo" column="COUPON_NO"/>
+		<result property="couponName" column="COUPON_NAME"/>
+		<result property="couponContents" column="COUPON_CONTENTS"/>
+		<result property="couponDiscountPrice" column="COUPON_DISCOUNT_PRICE"/>
+		<result property="couponStartDate" column="COUPON_START_DATE"/>
+		<result property="couponEndDate" column="COUPON_END_DATE"/>
+		<result property="empId" column="EMP_ID"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.ReservationDTO" id="reservationResultMap">
+		<id property="reservationNo" column="RESERVATION_NO"/>
+		<result property="reservationCheckIn" column="RESERVATION_CHECKIN"/>
+		<result property="reservationCheckOut" column="RESERVATION_CHECKOUT"/>
+		<result property="reservationPrice" column="RESERVATION_PRICE"/>
+		<result property="reservationAmount" column="RESERVATION_AMOUNT"/>
+		<result property="userNo" column="USER_NO"/>
+		
+		<association property="petsitter" resultMap="petsitterReservationResultMap"/>
+		<association property="room" resultMap="roomResultMap"/>
+		<association property="pet" resultMap="petResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.PetsitterReservationDTO" id="petsitterReservationResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="petsitterAble" column="PETSITTER_ABLE"/>
+		<result property="abilityCode" column="ABILITY_CODE"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.RoomDTO" id="roomResultMap">
+		<id property="roomNo" column="ROOM_NO"/>
+		<result property="roomName" column="ROOM_NAME"/>
+		<result property="roomPrice" column="ROOM_PRICE"/>
+		<result property="roomAble" column="ROOM_ABLE"/>
+		
+		<association property="categoryDTO" column="roomCategoryResultMap">
+			<id property="roomCategory" column="ROOM_CATEGORY"/>
+			<result property="roomLimit" column="ROOM_LIMIT"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.PetDTO" id="petResultMap">
+		<id property="petNo" column="PET_NO"/>
+		<result property="petNumber" column="PET_NUMBER"/>
+		<result property="petName" column="PET_NAME"/>
+		<result property="petAge" column="PET_AGE"/>
+		<result property="petWeight" column="PET_WEIGHT"/>
+		<result property="petType" column="PET_TYPE"/>
+		<result property="petSex" column="PET_SEX"/>
+		<result property="perioVaccinate" column="PERIO_VACCINATE"/>
+		<result property="rabiesVaccinate" column="RABIES_VACCINATE"/>
+		<result property="petNeuter" column="PET_NEUTER"/>
+		<result property="petCharacter" column="PET_CHARACTER"/>
+		<result property="petHealth" column="PET_HEALTH"/>
+		<result property="petEtc" column="PET_ETC"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+	</resultMap>
+
+	<select id="selectInfoMember" resultMap="memberInfoSelectResultMap">
+		SELECT
+		A.MEMBER_NO
+		, A.MEMBER_ID
+		, A.MEMBER_PWD
+		, A.MEMBER_NAME
+		, A.MEMBER_BIRTH
+		, A.MEMBER_PHONE
+		, A.MEMBER_EMAIL
+		, A.MEMBER_POINT
+		, A.GRADE_NO
+		FROM MEMBER A
+	</select>
+	
+	<select id="selectAllCouponList" parameterType="_int" resultMap="memberCouponSelectResultMap">
+		SELECT
+     		   A.COUPON_NO
+   			 , A.MEMBER_NO
+    		 , A.MEMBER_COUPON_USED
+   		     , B.COUPON_NO
+   		     , B.COUPON_NAME
+    		 , B.COUPON_CONTENTS
+    		 , B.COUPON_DISCOUNT_PRICE
+    		 , B.COUPON_START_DATE
+    		 , B.COUPON_END_DATE
+     		 , B.EMP_ID
+ 		  FROM MEMBER_COUPON A
+ 		  LEFT JOIN COUPON B ON (A.COUPON_NO = B.COUPON_NO)
+ 		 WHERE A.MEMBER_NO = #{userNo}
+ 		 ORDER BY B.COUPON_END_DATE
+	</select>
+	
+	<select id="selectUserReservationList" parameterType="_int" resultMap="reservationResultMap">
+		SELECT
+			   A.RESERVATION_NO
+			 , A.RESERVATION_CHECKIN
+			 , A.RESERVATION_CHECKOUT
+			 , A.RESERVATION_PRICE
+			 , A.RESERVATION_AMOUNT
+			 , C.EMP_ID
+			 , A.ROOM_NO
+			 , B.ROOM_NO
+			 , B.ROOM_NAME
+			 , B.ROOM_PRICE
+		  FROM RESERVATION A
+		  JOIN ROOM B ON(A.ROOM_NO = B.ROOM_NO)
+		  JOIN PETSITTER C ON(A.EMP_ID = C.EMP_ID)
+		 WHERE A.USER_NO = #{userNo}
+		 ORDER BY A.RESERVATION_CHECKOUT DESC
+	</select>
+</mapper>
+	
+
+	
+	
+	

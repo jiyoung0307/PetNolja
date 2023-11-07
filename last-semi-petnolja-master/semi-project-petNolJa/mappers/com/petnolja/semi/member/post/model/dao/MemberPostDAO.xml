@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.post.model.dao.MemberPostDAO">
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.PetsitterPostDTO" id="petsitterPostResultMap">
+		<id property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+		<result property="petsitterPostTitle" column="PETSITTER_POST_TITLE"/>
+		<result property="petsitterPostCareer" column="PETSITTER_POST_CAREER"/>
+		<result property="petsitterPostContents" column="PETSITTER_POST_CONTENTS"/>   
+		<result property="petsitterCreateDate" column="PETSITTER_POST_CREATEDATE"/>
+		<result property="petsitterModifyDate" column="PETSITTER_POST_MODIFYDATE"/>
+		<result property="petsitterPostCount" column="PETSITTER_POST_COUNT"/>
+		<result property="petsitterPostStatus" column="PETISTTER_POST_STATUS"/>
+		<result property="empId" column="EMP_ID"/>
+		
+		<association property="emp" resultMap="employeeResultMap"/>
+		
+		<collection property="adminPicture" resultMap="adminPictureResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="employeeResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="no" column="EMP_NO"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="bonus" column="BONUS"/>
+		<result property="hireDate" column="HIREDATE"/>
+		<result property="leaveDate" column="LEAVEDATE"/>
+		<result property="dropYN" column="DROP_YN"/>
+		<result property="deptCode" column="DEPT_CODE"/>
+		<result property="jopCode" column="JOB_CODE"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPictureDTO" id="adminPictureResultMap">
+		<id property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+		<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+		<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+		<result property="adminPaictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+		<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+		<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+		<result property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.AdminPictureAndRoomPostDTO" id="SelectRoomListResultMap">
+	 	<id property="pictureNo" column="ADMIN_PICTURE_NO"/>
+	 	<result property="pictureName" column="ADMIN_PICTURE_NAME"/>
+	 	<result property="pictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+	 	<result property="pictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+	 	<result property="pictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+	 	<association property="roomPostDTO" javaType="com.petnolja.semi.admin.common.dto.RoomPostDTO">
+	 		<id property="roomPostNo" column="ROOM_POST_NO"/>
+	 		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+	 	</association>
+	</resultMap>
+	
+	  	<resultMap type="com.petnolja.semi.admin.common.dto.RoomPostAndAdminPictureDTO" id="RoomPostAndAdminPictureResultMap">
+		<id property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+		<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+		<result property="roomPostDate" column="ROOM_POST_DATE"/>
+		<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+		<result property="empId" column="EMP_ID"/>
+		<collection property="adminPictureList" ofType="com.petnolja.semi.admin.common.dto.AdminPictureDTO">
+			<id property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+			<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+			<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+			<result property="adminPictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+			<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+			<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+			<result property="roomPostNo" column="ROOM_POST_NO"/>
+			<result property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+		</collection>
+	</resultMap> 
+	
+<!-- 	  <resultMap type="com.petnolja.semi.member.common.dto.RoomPostAndAdminPictureDTO" id="selectRoomDetailResultMap">
+  	<id property="roomPostNo" column="ROOM_POST_NO"/>
+  	<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+  	<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+  	<result property="roomPostDate" column="ROOM_POST_DATE"/>
+  	<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+  	<result property="empId" column="EMP_ID"/>
+  	<collection property="AdminPictureDTO" ofType="com.petnolja.semi.member.common.dto.AdminPictureDTO">
+  		<id property="pictureNo" column="ADMIN_PICTURE_NO"/>
+  		<result property="pictureName" column="ADMIN_PICTURE_NAME"/>
+  		<result property="pictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+  		<result property="pictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+  		<result property="pictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+  	</collection>
+  </resultMap> -->
+	
+<!-- 	<resultMap type="com.petnolja.semi.member.common.dto.selectRoomDetailDTO" id="selectRoomDetailResultMap">
+	<id property="roomPostNo" column="ROOM_POST_NO"/>
+  	<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+  	<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+  	<result property="pictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+	</resultMap> -->
+
+	<resultMap type="com.petnolja.semi.member.common.dto.LocationDTO" id="locationIntroResultMap">
+	<id property="locationPostNo" column="LOCATION_POST_NO"/>
+  	<result property="locationPostTitle" column="LOCATION_POST_TITLE"/>
+  	<result property="locationPostLtitle" column="LOCATION_POST_LTITLE"/>
+  	<result property="locationOldPost" column="LOCATION_OLD_POST"/>
+  	<result property="locationNewPost" column="LOCATION_NEW_POST"/>
+  	<result property="telePhoneNumber" column="LOCATION_TELEPHONENUMBER"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.CompanyDTO" id="CompanyIntroResultMap">
+  	<result property="hotelPostTitle" column="HOTEL_POST_TITLE"/>
+  	<result property="hotelPostLtitle" column="HOTEL_POST_LTITLE"/>
+  	<result property="hotelPostPicNo" column="ADMIN_PICTURE_SAVEROUTE"/>
+  	<result property="hotelPostContentsFirst" column="HOTEL_POST_CONTENTS"/>
+  	<result property="hotelPostContentsTwo" column="HOTEL_POST_CONTENTS2"/>
+  	<result property="hotelPostContentsThird" column="HOTEL_POST_CONTENTS3"/>
+  	<result property="empId" column="EMP_ID"/>
+	</resultMap>
+	
+	<select id="selectTotalCount" parameterType="map" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM PETSITTER_POST A
+	</select>
+	
+<!-- 	<select id="selectPetsitterPostList" parameterType="com.petnolja.semi.common.paging.SelectCriteria" resultMap="petsitterPostResultMap">
+		SELECT
+			   A.PETSITTER_POST_NO
+			 , A.PETSITTER_POST_TITLE
+			 , A.PETSITTER_POST_CONTENTS
+			 , A.PETSITTER_POST_CAREER
+			 , A.PETSITTER_POST_CREATEDATE
+			 , A.PETSITTER_POST_MODIFYDATE
+			 , A.PETSITTER_POST_COUNT
+			 , A.EMP_ID
+			 , B.ADMIN_PICTURE_NAME
+			 , B.ADMIN_PICTURE_MODIFYNAME
+			 , B.ADMIN_PICTURE_SAVEROUTE
+			 , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+			 , C.EMP_NAME
+		  FROM PETSITTER_POST A
+		  LEFT JOIN ADMIN_PICTURE B ON(A.PETSITTER_POST_NO = B.PETSITTER_POST_NO)
+		  LEFT JOIN EMPLOYEE C ON(A.EMP_ID = C.EMP_ID)
+		 WHERE A.PETISTTER_POST_STATUS = 'Y'
+		 ORDER BY A.PETSITTER_POST_NO DESC
+	</select> -->
+	
+	<select id="selectPetsitterPostList" parameterType="com.petnolja.semi.common.paging.SelectCriteria" resultMap="petsitterPostResultMap">
+		SELECT
+               B.RNUM
+			 , B.PETSITTER_POST_NO
+			 , B.PETSITTER_POST_TITLE
+			 , B.PETSITTER_POST_CONTENTS
+			 , B.PETSITTER_POST_CAREER
+			 , B.PETSITTER_POST_CREATEDATE
+			 , B.PETSITTER_POST_MODIFYDATE
+			 , B.PETSITTER_POST_COUNT
+			 , B.EMP_ID
+			 , B.ADMIN_PICTURE_NAME
+			 , B.ADMIN_PICTURE_MODIFYNAME
+			 , B.ADMIN_PICTURE_SAVEROUTE
+			 , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+			 , B.EMP_NAME
+             FROM (SELECT
+               ROWNUM RNUM
+			 , A.PETSITTER_POST_NO
+			 , A.PETSITTER_POST_TITLE
+			 , A.PETSITTER_POST_CONTENTS
+			 , A.PETSITTER_POST_CAREER
+			 , A.PETSITTER_POST_CREATEDATE
+			 , A.PETSITTER_POST_MODIFYDATE
+			 , A.PETSITTER_POST_COUNT
+			 , A.EMP_ID
+			 , A.ADMIN_PICTURE_NAME
+			 , A.ADMIN_PICTURE_MODIFYNAME
+			 , A.ADMIN_PICTURE_SAVEROUTE
+			 , A.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+			 , A.EMP_NAME
+		  FROM (SELECT
+                       A.PETSITTER_POST_NO
+                     , A.PETSITTER_POST_TITLE
+                     , A.PETSITTER_POST_CONTENTS
+                     , A.PETSITTER_POST_CAREER
+                     , A.PETSITTER_POST_CREATEDATE
+                     , A.PETSITTER_POST_MODIFYDATE
+                     , A.PETSITTER_POST_COUNT
+                     , A.EMP_ID
+                    , B.ADMIN_PICTURE_NAME
+                    , B.ADMIN_PICTURE_MODIFYNAME
+                    , B.ADMIN_PICTURE_SAVEROUTE
+                    , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+                    , C.EMP_NAME
+                 FROM PETSITTER_POST A
+                 LEFT JOIN ADMIN_PICTURE B ON(A.PETSITTER_POST_NO = B.PETSITTER_POST_NO)
+                 LEFT JOIN EMPLOYEE C ON(A.EMP_ID = C.EMP_ID)
+                WHERE A.PETISTTER_POST_STATUS = 'Y'
+                ORDER BY A.PETSITTER_POST_NO DESC) A
+                <![CDATA[WHERE ROWNUM <= #{endRow}]]>
+                ) B
+            WHERE B.RNUM >= #{startRow}
+	</select>
+
+	<update id="increamentPetsitterPostCount" parameterType="_int">
+		UPDATE
+			   PETSITTER_POST A
+		   SET A.PETSITTER_POST_COUNT = (SELECT B.PETSITTER_POST_COUNT
+		   								   FROM PETSITTER_POST B
+		   								  WHERE B.PETSITTER_POST_NO = #{petsitterPostNo}
+		   								) + 1
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+	</update>
+	
+	<select id="selectPetsitterPostDetail" parameterType="_int" resultMap="petsitterPostResultMap">
+		SELECT
+			   A.PETSITTER_POST_NO
+			 , A.PETSITTER_POST_TITLE
+			 , A.PETSITTER_POST_CAREER
+			 , A.PETSITTER_POST_CONTENTS
+			 , A.PETSITTER_POST_CREATEDATE
+			 , A.PETSITTER_POST_MODIFYDATE
+			 , A.PETSITTER_POST_COUNT
+			 , A.EMP_ID
+			 , C.EMP_NAME
+			 , B.ADMIN_PICTURE_NAME
+			 , B.ADMIN_PICTURE_MODIFYNAME
+			 , B.ADMIN_PICTURE_SAVEROUTE
+			 , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+		  FROM PETSITTER_POST A
+		  JOIN ADMIN_PICTURE B ON(A.PETSITTER_POST_NO = B.PETSITTER_POST_NO)
+		  JOIN EMPLOYEE C ON(A.EMP_ID = C.EMP_ID)
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+		   AND A.PETISTTER_POST_STATUS = 'Y'
+	</select>
+	
+	<select id="SelectRoomListParameter" resultMap="RoomPostAndAdminPictureResultMap">
+ 		SELECT
+		       A.ROOM_POST_NO
+		     , A.ROOM_POST_TITLE
+		     , A.ROOM_POST_CONTENTS
+		     , A.ROOM_POST_DATE
+		     , A.ROOM_POST_ABLE
+		     , A.EMP_ID
+             , B.ADMIN_PICTURE_NO
+             , B.ADMIN_PICTURE_SAVEROUTE
+             , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+		  FROM ROOM_POST A
+          LEFT OUTER JOIN ADMIN_PICTURE B ON (A.ROOM_POST_NO = B.ROOM_POST_NO)
+         WHERE A.ROOM_POST_ABLE = 'Y'
+	</select>
+	
+		<select id="selectRoomDetailParameter" parameterType="string" resultMap="RoomPostAndAdminPictureResultMap">
+	   SELECT 
+	          A.ROOM_POST_NO
+	        , A.ROOM_POST_TITLE
+	        , A.ROOM_POST_CONTENTS
+	        , B.ADMIN_PICTURE_SAVEROUTE
+	        , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+	     FROM ROOM_POST A
+	     JOIN ADMIN_PICTURE B ON (A.ROOM_POST_NO = B.ROOM_POST_NO)
+	    WHERE A.ROOM_POST_NO = #{roomPostNo}
+	</select> 
+	
+	<select id="selectLocationPost" resultMap="locationIntroResultMap">
+		SELECT
+			    LOCATION_POST_NO		
+  			  , LOCATION_POST_TITLE
+			  , LOCATION_POST_LTITLE
+			  , LOCATION_OLD_POST
+			  , LOCATION_NEW_POST
+			  , LOCATION_TELEPHONENUMBER
+	      FROM LOCATION_POST
+	</select>
+	
+	<select id="selectCompanyPost" resultMap="CompanyIntroResultMap">
+ 	    SELECT
+  
+ 				  A.HOTEL_POST_TITLE
+				, A.HOTEL_POST_LTITLE
+				, A.HOTEL_POST_CONTENTS
+				, A.HOTEL_POST_CONTENTS2
+				, A.HOTEL_POST_CONTENTS3
+				<!-- , B.ADMIN_PICTURE_SAVEROUTE -->
+				, C.EMP_ID
+	     FROM HOTEL_POST A
+         LEFT OUTER JOIN ADMIN_PICTURE B ON (A.HOTEL_POST_PIC_NO = B.ADMIN_PICTURE_NO)
+         LEFT OUTER JOIN EMPLOYEE C ON (A.EMP_ID = C.EMP_ID)
+	</select>
+</mapper>

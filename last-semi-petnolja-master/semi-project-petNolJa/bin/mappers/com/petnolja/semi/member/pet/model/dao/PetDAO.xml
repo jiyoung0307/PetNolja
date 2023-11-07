@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.petnolja.semi.member.pet.model.dao.PetDAO">
+
+	<resultMap type="com.petnolja.semi.member.common.dto.PetDTO" id="petResultMap">
+		<id property="petNo" column="PET_NO"/>
+		<result property="petKind" column="PET_KIND"/>
+		<result property="petNumber" column="PET_NUMBER"/>
+		<result property="petName" column="PET_NAME"/>
+		<result property="petAge" column="PET_AGE"/>
+		<result property="petWeight" column="PET_WEIGHT"/>
+		<result property="petType" column="PET_TYPE"/>
+		<result property="petSex" column="PET_SEX"/>
+		<result property="perioVaccinate" column="PERIO_VACCINATE"/>
+		<result property="rabiesVaccinate" column="RABIES_VACCINATE"/>
+		<result property="petNeuter" column="PET_NEUTER"/>
+		<result property="petCharacter" column="PET_CHARACTER"/>
+		<result property="petHealth" column="PET_HEALTH"/>
+		<result property="petEtc" column="PET_ETC"/>
+		<result property="memberNo" column="MEMBER_NO"/>		
+	</resultMap>
+
+	<select id="petSelect" parameterType="_int" resultMap="petResultMap">
+		SELECT
+    		   A.PET_NO
+    		 , A.PET_KIND
+    		 , A.PET_NUMBER
+    		 , A.PET_NAME
+    		 , A.PET_AGE
+     		 , A.PET_WEIGHT
+     		 , A.PET_TYPE
+     		 , A.PET_SEX
+   		  	 , A.PERIO_VACCINATE
+     		 , A.RABIES_VACCINATE
+    		 , A.PET_NEUTER
+    		 , A.PET_CHARACTER
+    		 , A.PET_HEALTH
+     		 , A.PET_ETC
+    		 , B.MEMBER_NO
+  		  FROM PET A
+ 		  JOIN MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)	
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+	</select>
+	
+	<insert id="petInsert" parameterType="com.petnolja.semi.member.common.dto.PetDTO">
+		 INSERT
+ 			 INTO PET
+		(
+		  	PET_NO
+		  ,	PET_KIND
+		  , PET_NUMBER
+		  , PET_NAME
+		  , PET_AGE
+		  , PET_WEIGHT
+		  , PET_TYPE
+		  , PET_SEX
+		  , PERIO_VACCINATE
+		  , RABIES_VACCINATE
+		  , PET_NEUTER
+		  , PET_CHARACTER
+		  , PET_HEALTH
+		  , PET_ETC
+		)
+		VALUES
+		(
+  			SEQ_PET_NO.NEXTVAL
+  		  , #{petKind}
+		  , #{petNumber}
+		  , #{petName}
+		  , #{petAge}
+		  , #{petWeight}
+		  , #{petType}
+		  , #{petSex}
+		  , #{perioVaccinate}
+		  , #{rabiesVaccinate}
+		  , #{petNeuter}
+		  , #{petCharacter}
+		  , #{petHealth}
+		  , #{petEtc}
+		)
+	</insert>
+</mapper>

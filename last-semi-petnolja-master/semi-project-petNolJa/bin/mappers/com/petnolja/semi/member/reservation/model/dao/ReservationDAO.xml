@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.reservation.model.dao.ReservationDAO">
+	
+	<!-- <resultMap type="com.petnolja.semi.admin.common.dto.PetsitterDTO" id="petsitterResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="petsitterAble" column="PETSITTER_ABLE"/>
+		<result property="abilityCode" column="ABILITY_CODE"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="dropYn" column="DROP_YN"/>
+		<result property="abilityDef" column="ABILITY_DEF"/>
+		<result property="abilityFirst" column="ABILITY_FIRST"/>
+		<result property="abilitySecond" column="ABILITY_SECOND"/>
+		<result property="abilityMoney" column="ABILITY_MONEY"/>
+		<result property="petsitterPostTitle" column="PETSITTER_POST_TITLE"/>
+		<result property="petsitterPostCareer" column="PETSITTER_POST_CAREER"/>
+		<result property="petsitterPostContents" column="PETSITTER_POST_CONTENTS"/>
+		<result property="petsitterPostCreateDate" column="PETSITTER_POST_CREATEDATE"/>
+		<result property="petsitterPostModifyDate" column="PETSITTER_POST_MODIFYDATE"/>
+		<result property="petsitterPostCount" column="PETSITTER_POST_COUNT"/>
+		<result property="petsitterPostStatus" column="PETISTTER_POST_STATUS"/>
+		<result property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+		<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+		<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+		<result property="adminPictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+		<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+		<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+		
+		<collection property="petsitterLog">
+			<id property="petsitterLogNo" column="PETSITTER_LOG_NO"/>
+			<result property="petsitterLogDate" column="PETSITTER_LOG_DATE"/>
+			<result property="petsiteerLogCheck" column="PETSITTER_LOG_CHECK"/>
+			<result property="empId" column="EMP_ID"/>
+		</collection>
+	</resultMap> -->
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.PetsitterReservationDTO" id="petsitterReservationResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="petsitterAble" column="PETSITTER_ABLE"/>
+		<result property="abilityCode" column="ABILITY_CODE"/>
+		
+		<association property="emp" resultMap="employeeResultMap"/>
+		<association property="petsitterLog" resultMap="petsitterLogResultMap"/>
+		<association property="ability" resultMap="abilityResultMap"/>
+		<association property="petsitterPost" resultMap="petsitterPostResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="employeeResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="no" column="EMP_NO"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="bonus" column="BONUS"/>
+		<result property="hireDate" column="HIREDATE"/>
+		<result property="leaveDate" column="LEAVEDATE"/>
+		<result property="dropYN" column="DROP_YN"/>
+		<result property="deptCode" column="DEPT_CODE"/>
+		<result property="jopCode" column="JOB_CODE"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.PetsitterLogDTO" id="petsitterLogResultMap">
+		<id property="petsitterLogNo" column="PETSITTER_LOG_NO"/>
+		<result property="petsitterLogDate" column="PETSITTER_LOG_DATE"/>
+		<result property="petsiteerLogCheck" column="PETSITTER_LOG_CHECK"/>
+		<result property="empId" column="EMP_ID"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.AbilityDTO" id="abilityResultMap">
+		<id property="abilityCode" column="ABILITY_CODE"/>
+		<result property="abilityDef" column="ABILITY_DEF"/>
+		<result property="abilityFirst" column="ABILITY_FIRST"/>
+		<result property="abilitySecond" column="ABILITY_SECOND"/>
+		<result property="abilityMoney" column="ABILITY_MONEY"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.PetsitterPostDTO" id="petsitterPostResultMap">
+		<id property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+		<result property="petsitterPostTitle" column="PETSITTER_POST_TITLE"/>
+		<result property="petsitterPostCareer" column="PETSITTER_POST_CAREER"/>
+		<result property="petsitterPostContents" column="PETSITTER_POST_CONTENTS"/>
+		<result property="petsitterCreateDate" column="PETSITTER_POST_CREATEDATE"/>
+		<result property="petsitterModifyDate" column="PETSITTER_POST_MODIFYDATE"/>
+		<result property="petsitterPostCount" column="PETSITTER_POST_COUNT"/>
+		<result property="petsitterPostStatus" column="PETISTTER_POST_STATUS"/>
+		<result property="empId" column="EMP_ID"/>
+		
+		<association property="emp" resultMap="employeeResultMap"/>
+		
+		<collection property="adminPicture" resultMap="adminPictureResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPictureDTO" id="adminPictureResultMap">
+		<id property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+		<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+		<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+		<result property="adminPictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+		<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+		<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+		<result property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.RoomDTO" id="roomResultMap">
+		<id property="roomNo" column="ROOM_NO"/>
+		<result property="roomName" column="ROOM_NAME"/>
+		<result property="roomPrice" column="ROOM_PRICE"/>
+		<result property="roomAble" column="ROOM_ABLE"/>
+		
+		<association property="categoryDTO" column="roomCategoryResultMap">
+			<id property="roomCategory" column="ROOM_CATEGORY"/>
+			<result property="roomLimit" column="ROOM_LIMIT"/>
+		</association>
+		<association property="roomPostDTO" resultMap="roomPostResultMap"/>
+	</resultMap>
+	<resultMap type="com.petnolja.semi.admin.common.dto.RoomPostDTO" id="roomPostResultMap">
+		<id property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+		<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+		<result property="roomPostDate" column="ROOM_POST_DATE"/>
+		<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+		<result property="empId" column="EMP_ID"/>
+		
+		<association property="adminPicture" resultMap="adminPictureResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.ReservationDTO" id="reservationResultMap">
+		<id property="reservationNo" column="RESERVATION_NO"/>
+		<result property="reservationCheckIn" column="RESERVATION_CHECKIN"/>
+		<result property="reservationCheckOut" column="RESERVATION_CHECKOUT"/>
+		<result property="reservationPrice" column="RESERVATION_PRICE"/>
+		<result property="reservationAmount" column="RESERVATION_AMOUNT"/>
+		<result property="userNo" column="USER_NO"/>
+		<result property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="petsitterAble" column="PETSITTER_ABLE"/>
+		<result property="abilityCode" column="ABILITY_CODE"/>
+		<result property="abilityDef" column="ABILITY_DEF"/>
+		<result property="abilityFirst" column="ABILITY_FIRST"/>
+		<result property="abilitySecond" column="ABILITY_SECOND"/>
+		<result property="abilityMoney" column="ABILITY_MONEY"/>
+		<result property="roomNo" column="ROOM_NO"/>
+		<result property="roomName" column="ROOM_NAME"/>
+		<result property="roomPrice" column="ROOM_PRICE"/>
+		<result property="roomAble" column="ROOM_ABLE"/>
+		<result property="roomCategory" column="ROOM_CATEGORY"/>
+		<result property="roomLimit" column="ROOM_LIMIT"/>
+	</resultMap>
+	<resultMap type="com.petnolja.semi.member.common.dto.PetDTO" id="petResultMap">
+		<id property="petNo" column="PET_NO"/>
+		<result property="petNumber" column="PET_NUMBER"/>
+		<result property="petName" column="PET_NAME"/>
+		<result property="petAge" column="PET_AGE"/>
+		<result property="petWeight" column="PET_WEIGHT"/>
+		<result property="petType" column="PET_TYPE"/>
+		<result property="petSex" column="PET_SEX"/>
+		<result property="perioVaccinate" column="PERIO_VACCINATE"/>
+		<result property="rabiesVaccinate" column="RABIES_VACCINATE"/>
+		<result property="petNeuter" column="PET_NEUTER"/>
+		<result property="petCharacter" column="PET_CHARACTER"/>
+		<result property="petHealth" column="PET_HEALTH"/>
+		<result property="petEtc" column="PET_ETC"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.MemberCouponDTO" id="memberCouponResultMap">
+		<id property="couponNo" column="COUPON_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberCouponUsed" column="MEMBER_COUPON_USED"/>
+		
+		<association property="coupon" resultMap="couponResultMap">
+			<id property="couponNo" column="COUPON_NO"/>
+			<result property="couponName" column="COUPON_NAME"/>
+			<result property="couponContents" column="COUPON_CONTENTS"/>
+			<result property="couponDiscountPrice" column="COUPON_DISCOUNT_PRICE"/>
+			<result property="couponStartDate" column="COUPON_START_DATE"/>
+			<result property="couponEndDate" column="COUPON_END_DATE"/>
+			<result property="empId" column="EMP_ID"/>
+		</association>
+	</resultMap>
+	
+	<select id="selectAllRoomPost" resultMap="roomResultMap">
+		SELECT
+			   A.ROOM_NO
+     		 , A.ROOM_NAME
+     		 , A.ROOM_PRICE
+     		 , A.ROOM_ABLE
+     		 , A.ROOM_CATEGORY
+     		 , B.ROOM_LIMIT
+     		 , D.ADMIN_PICTURE_SAVEROUTE
+     		 , D.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+  		  FROM ROOM A
+  		  LEFT JOIN ROOM_CATEGORY B ON(A.ROOM_CATEGORY = B.ROOM_CATEGORY)
+  		  LEFT JOIN ROOM_POST C ON(A.ROOM_NAME = C.ROOM_POST_TITLE)
+  		  LEFT JOIN ADMIN_PICTURE D ON(C.ROOM_POST_NO = D.ROOM_POST_NO)
+	</select>
+	
+	<select id="selectRoomReservationInfo" parameterType="_int" resultMap="roomResultMap">
+		SELECT
+			   A.ROOM_NO
+			 , A.ROOM_NAME
+			 , A.ROOM_PRICE
+			 , A.ROOM_ABLE
+			 , B.ROOM_CATEGORY
+			 , B.ROOM_LIMIT
+		  FROM ROOM A
+		  JOIN ROOM_CATEGORY B ON(A.ROOM_CATEGORY = B.ROOM_CATEGORY)
+		 WHERE A.ROOM_NO = #{roomNo}
+	</select>
+
+	<select id="selectTotalCount" parameterType="string" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM PETSITTER A
+		  JOIN PETSITTER_LOG B ON(A.EMP_ID = B.EMP_ID)
+		 WHERE B.PETSITTER_LOG_DATE != #{checkIn}
+	</select>
+	
+	<select id="selectPetsitterListReservation" parameterType="map" resultMap="petsitterReservationResultMap">
+		SELECT B.RNUM
+    		 , B.EMP_ID
+       		 , B.PETSITTER_ABLE
+       		 , B.ABILITY_CODE
+       		 , B.EMP_NAME
+       		 , B.EMP_EMAIL
+       		 , B.EMP_PHONE
+       		 , B.DROP_YN
+       		 , B.ABILITY_DEF
+       		 , B.ABILITY_FIRST
+       		 , B.ABILITY_SECOND
+       		 , B.ABILITY_MONEY
+       		 , B.PETSITTER_POST_TITLE
+       		 , B.PETSITTER_POST_CAREER
+       		 , B.PETSITTER_POST_CONTENTS
+       		 , B.PETSITTER_POST_CREATEDATE
+       		 , B.PETSITTER_POST_MODIFYDATE
+       		 , B.PETSITTER_POST_COUNT
+       		 , B.PETISTTER_POST_STATUS
+       		 , B.ADMIN_PICTURE_NO
+       		 , B.ADMIN_PICTURE_NAME
+       		 , B.ADMIN_PICTURE_MODIFYNAME
+             , B.ADMIN_PICTURE_SAVETIME
+       		 , B.ADMIN_PICTURE_SAVEROUTE
+             , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+       		 , B.PETSITTER_LOG_DATE
+       		 , B.PETSITTER_LOG_CHECK
+	    FROM (SELECT ROWNUM RNUM
+        		   , A.EMP_ID
+       			   , A.PETSITTER_ABLE
+      			   , A.ABILITY_CODE
+       			   , B.EMP_NAME
+       	   		   , B.EMP_EMAIL
+       			   , B.EMP_PHONE
+      			   , B.DROP_YN
+       			   , C.ABILITY_DEF
+       			   , C.ABILITY_FIRST
+        		   , C.ABILITY_SECOND
+        		   , C.ABILITY_MONEY
+        		   , D.PETSITTER_POST_TITLE
+        		   , D.PETSITTER_POST_CAREER
+       			   , D.PETSITTER_POST_CONTENTS
+       			   , D.PETSITTER_POST_CREATEDATE
+        		   , D.PETSITTER_POST_MODIFYDATE
+        		   , D.PETSITTER_POST_COUNT
+      			   , D.PETISTTER_POST_STATUS
+        		   , E.ADMIN_PICTURE_NO
+        		   , E.ADMIN_PICTURE_NAME
+        		   , E.ADMIN_PICTURE_MODIFYNAME
+        		   , E.ADMIN_PICTURE_SAVETIME
+        		   , E.ADMIN_PICTURE_SAVEROUTE
+        		   , E.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+        		   , F.PETSITTER_LOG_DATE
+        		   , F.PETSITTER_LOG_CHECK
+    		    FROM PETSITTER A
+     		    LEFT JOIN EMPLOYEE B ON(A.EMP_ID = B.EMP_ID)
+    			LEFT JOIN ABILITY C ON(A.ABILITY_CODE = C.ABILITY_CODE)
+    			LEFT JOIN PETSITTER_POST D ON(B.EMP_NAME = D.PETSITTER_POST_TITLE)
+    			LEFT JOIN ADMIN_PICTURE E ON(D.PETSITTER_POST_NO = E.PETSITTER_POST_NO)
+      		  	LEFT JOIN PETSITTER_LOG F ON(A.EMP_ID = F.EMP_ID)
+        <![CDATA[WHERE ROWNUM <= #{endRow}]]>
+        AND F.PETSITTER_LOG_DATE = #{checkIn}
+        AND F.PETSITTER_LOG_CHECK = 'N'
+         OR F.PETSITTER_LOG_DATE != #{checkIn}
+    		   ORDER BY C.ABILITY_MONEY, B.EMP_NAME) B
+	   WHERE B.RNUM >= #{startRow}
+	</select>
+	
+	
+	
+	<!-- <select id="selectReservation" resultMap="reservationResultMap">
+		SELECT
+       		   A.RESERVATION_NO
+   		     , A.RESERVATION_CHECKIN
+   		     , A.RESERVATION_CHECKOUT
+   		     , A.RESERVATION_PRICE
+   		     , A.RESERVATION_AMOUNT
+   		     , A.USER_NO
+    		 , A.EMP_ID
+    		 , A.PETSITTER_ABLE
+    		 , A.ABILITY_CODE
+    		 , A.ABILITY_DEF
+    		 , A.ABILITY_FIRST
+    		 , A.ABILITY_SECOND
+     		 , A.ABILITY_MONEY
+    		 , A.ROOM_NO
+     		 , A.ROOM_NAME
+     	  	 , A.ROOM_PRICE
+     		 , A.ROOM_ABLE
+     	  	 , A.ROOM_CATEGORY
+     	  	 , A.ROOM_LIMIT
+   	      FROM V_RESERVATION A
+	</select> -->
+	
+	<select id="selectPetList" parameterType="_int" resultMap="petResultMap">
+		SELECT
+			   A.PET_NO
+			 , A.PET_NUMBER
+			 , A.PET_NAME
+			 , A.PET_AGE
+			 , A.PET_WEIGHT
+			 , A.PET_TYPE
+			 , A.PET_SEX
+			 , A.PERIO_VACCINATE
+			 , A.RABIES_VACCINATE
+			 , A.PET_NEUTER
+			 , A.PET_CHARACTER
+			 , A.PET_HEALTH
+			 , A.PET_ETC
+		  FROM PET A
+		 WHERE A.MEMBER_NO = #{userNo}
+	</select>
+	
+	<select id="selectAllMemberCoupon" parameterType="_int" resultMap="memberCouponResultMap">
+		SELECT
+     		   A.COUPON_NO
+   		 	 , A.MEMBER_NO
+   			 , A.MEMBER_COUPON_USED
+   		     , B.COUPON_NO
+  		     , B.COUPON_NAME
+   		     , B.COUPON_CONTENTS
+    		 , B.COUPON_DISCOUNT_PRICE
+     		 , B.COUPON_START_DATE
+   			 , B.COUPON_END_DATE
+    		 , B.EMP_ID
+  		  FROM MEMBER_COUPON A
+  		  LEFT JOIN COUPON B ON(A.COUPON_NO = B.COUPON_NO)
+ 		  WHERE A.MEMBER_NO = #{userNo}
+ 		    AND A.MEMBER_COUPON_USED = 'N'
+ 		    AND B.COUPON_END_DATE > SYSDATE
+	</select>
+	
+	<select id="selectPetsitterInfo" parameterType="_int" resultMap="petsitterReservationResultMap">
+		SELECT 
+			   A.EMP_ID
+       		 , A.PETSITTER_ABLE
+       		 , A.ABILITY_CODE
+       		 , B.EMP_NAME
+       		 , B.EMP_EMAIL
+       		 , B.EMP_PHONE
+       		 , B.DROP_YN
+       		 , C.ABILITY_DEF
+       		 , C.ABILITY_FIRST
+       		 , C.ABILITY_SECOND
+       		 , C.ABILITY_MONEY
+       		 , D.PETSITTER_POST_TITLE
+       		 , D.PETSITTER_POST_CAREER
+       		 , D.PETSITTER_POST_CONTENTS
+       		 , D.PETSITTER_POST_CREATEDATE
+       		 , D.PETSITTER_POST_MODIFYDATE
+       		 , D.PETSITTER_POST_COUNT
+       		 , D.PETISTTER_POST_STATUS
+       		 , E.ADMIN_PICTURE_NO
+       		 , E.ADMIN_PICTURE_NAME
+       		 , E.ADMIN_PICTURE_MODIFYNAME
+       		 , E.ADMIN_PICTURE_SAVETIME
+       		 , E.ADMIN_PICTURE_SAVEROUTE
+       		 , E.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+       		 , F.PETSITTER_LOG_DATE
+       		 , F.PETSITTER_LOG_CHECK
+       	  FROM PETSITTER A
+       	  LEFT OUTER JOIN EMPLOYEE B ON(A.EMP_ID = B.EMP_ID)
+       	  LEFT OUTER JOIN ABILITY C ON(A.ABILITY_CODE = C.ABILITY_CODE)
+       	  LEFT OUTER JOIN PETSITTER_POST D ON(B.EMP_NAME = D.PETSITTER_POST_TITLE)
+       	  LEFT OUTER JOIN ADMIN_PICTURE E ON(D.PETSITTER_POST_NO = E.PETSITTER_POST_NO)
+       	  LEFT OUTER JOIN PETSITTER_LOG F ON(A.EMP_ID = F.EMP_ID)
+       	 WHERE A.EMP_ID = #{petsitterNo}
+	</select>
+	
+	<insert id="insertReservationRoomIn" parameterType="map">
+		INSERT
+		  INTO ROOM_LOG A
+		(
+		  A.ROOM_LOG_NO
+		, A.ROOM_NO
+		, A.ROOM_LOG_DATE
+		, A.ROOM_LOG_CHECK
+		)
+		VALUES
+		(
+		  SEQ_ROOM_LOG_NO.NEXTVAL
+		, #{roomNo} 
+		, #{checkIn}
+		, 'IN'
+		)
+	</insert>
+	
+	<insert id="insertReservationRoomOut" parameterType="map">
+		INSERT
+		  INTO ROOM_LOG A
+		(
+		  A.ROOM_LOG_NO
+		, A.ROOM_NO
+		, A.ROOM_LOG_DATE
+		, A.ROOM_LOG_CHECK
+		)
+		VALUES
+		(
+		  SEQ_ROOM_LOG_NO.NEXTVAL
+		, #{roomNo}
+		, #{checkOut}
+		, 'OUT'
+		)
+	</insert>
+	
+	<insert id="insertReservationPetsitterIn" parameterType="map">
+		INSERT
+		  INTO PETSITTER_LOG A
+		(
+		  A.PETSITTER_LOG_NO
+		, A.PETSITTER_LOG_DATE
+		, A.PETSITTER_LOG_CHECK
+		, A.EMP_ID
+		)
+		VALUES
+		(
+		  SEQ_PETSITTER_LOG.NEXTVAL
+		, #{checkIn}
+		, 'Y'
+		, #{empNo}
+		)
+	</insert>
+	
+	<insert id="insertReservationPetsitterOut" parameterType="map">
+		INSERT
+		  INTO PETSITTER_LOG A
+		(
+		  A.PETSITTER_LOG_NO
+		, A.PETSITTER_LOG_DATE
+		, A.PETSITTER_LOG_CHECK
+		, A.EMP_ID
+		)
+		VALUES
+		(
+		  SEQ_PETSITTER_LOG.NEXTVAL
+		, #{checkOut}
+		, 'N'
+		, #{empNo}
+		)
+	</insert>
+	
+	<select id="selectDateMinus" parameterType="map" resultType="_int">
+		SELECT 
+               TO_DATE(REPLACE(#{checkOut}, '-', '/')) - TO_DATE(REPLACE(#{checkIn}, '-', '/'))
+          FROM DUAL
+	</select>
+	
+	<insert id="insertReservation" parameterType="com.petnolja.semi.member.common.dto.ReservationDTO">
+		INSERT
+		  INTO RESERVATION A
+		(
+		  A.RESERVATION_NO
+		, A.RESERVATION_CHECKIN
+		, A.RESERVATION_CHECKOUT
+		, A.RESERVATION_PRICE
+		, A.RESERVATION_AMOUNT
+		, A.USER_NO
+		, A.EMP_ID
+		, A.ROOM_NO
+		)
+		VALUES
+		(
+		  SEQ_RESERVATION_NO.NEXTVAL
+		, #{reservationCheckIn}
+		, #{reservationCheckOut}
+		, #{reservationPrice}
+		, #{reservationAmount}
+		, #{userNo}
+		, #{petsitter.empId}
+		, #{room.roomNo}
+		)
+	</insert>
+	
+	<update id="updateCouponUsed" parameterType="map">
+		UPDATE
+			   MEMBER_COUPON A
+		  INTO A.MEMBER_COUPON_USED = 'Y'
+		 WHERE A.MEMBER_NO = #{userNo}
+		   AND A.COUPON_NO = #{useCouponNo}
+	</update>
+	
+	<insert id="insertReservationPet" parameterType="com.petnolja.semi.member.common.dto.ReservationPetDTO">
+		INSERT
+		  INTO RESERVATION_PET A
+		(
+		  A.RESERVATION_PET_NO
+		, A.RESERVATION_PET_DOC
+		, A.RESERVATION_PET_NAME
+		, A.RESERVATION_PET_AGE
+		, A.RESERVATION_PET_WEIGHT
+		, A.RESERVATION_PET_TYPE
+		, A.RESERVATION_PET_SEX
+		, A.RESERVATION_PERIO_VACCINATE
+		, A.RESERVATION_RABIES_VACCINATE
+		, A.RESERVATION_PET_NEUTER
+		, A.RESERVATION_PET_CHARACTER
+		, A.RESERVATION_PET_HEALTH
+		, A.RESERVATION_PET_ETC
+		, A.RESERVATION_MEMBER_NO
+		, A.RESERVATION_NO
+		)
+		VALUES
+		(
+		  SEQ_RESERVATION_PET_NO.NEXTVAL
+		, #{petDoC}
+		, #{petName}
+		, #{petAge}
+		, #{petWeight}
+		, #{petType}
+		, #{petSex}
+		, #{perioVaccinate}
+		, #{rabiesVaccinate}
+		, #{petNeuter}
+		, #{petCharacter}
+		, #{health}
+		, #{petEtc}
+		, #{memberNo}
+		, #{reservationNo}
+		)
+	</insert>
+	
+	<insert id="insertPointLog" parameterType="map">
+		INSERT
+		  INTO POINT_LOG A
+		  (
+		    A.POINT_LOG_NO
+		  , A.POINT_LOG_DATE
+		  , A.POINT_LOG_CHECK
+		  , A.POINT_LOG_PRICE
+		  , A.MEMBER_NO
+		  )
+		  VALUE
+		  (
+		    SEQ_POINT_LOG_NO.NEXTVAL
+		  , SYSDATE
+		  , 'N'
+		  , #{usePoint}
+		  , #{userNo}
+		  )
+	</insert>
+	
+	<update id="updatePointMember" parameterType="map">
+		UPDATE
+			   MEMBER A
+		   SET A.MEMBER_POINT = A.MEMBER_POINT - #{usePoint}
+		 WHERE A.MEMBER_NO = #{userNo}
+	</update>
+	
+	<select id="selectUseCouponPrice" parameterType="_int" resultType="_int">
+		SELECT
+			   A.COUPON_DISCOUNT_PRICE
+		  FROM COUPON A
+		 WHERE A.COUPON_NO = #{useCouponNo}
+	</select>
+	
+	<select id="selectReservationNo" resultType="_int">
+		SELECT
+			   MAX(RESERVATION_NO)
+		  FROM RESERVATION
+	</select>
+	
+	<insert id="insertPayment" parameterType="com.petnolja.semi.member.common.dto.PaymentDTO">
+		INSERT
+		  INTO PAYMENT A
+		(
+		  A.RESERVATION_NO
+		, A.PAYMENT_DATE
+		, A.PAYMENT_PRICE
+		, A.PAYMENT_POINT_PRICE
+		, A.PAYMENT_COUPON_PRICE
+		, A.USER_NO
+		)
+		VALUES
+		(
+		  #{reservationNo}
+		, SYSDATE
+		, #{paymentPrice}
+		, #{paymentPointPrice}
+		, #{paymentCouponPrice}
+		, #{userNo}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.petnolja.semi.admin.post.model.dao.AdminPostDAO">
+	<resultMap type="com.petnolja.semi.admin.common.dto.RoomPostAndEmployeeDTO" id="selectRoomListResultMap">
+		<id property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+		<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+		<result property="roomPostDate" column="ROOM_POST_DATE"/>
+		<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+		<association property="employeeDTO" javaType="com.petnolja.semi.admin.common.dto.EmployeeDTO">
+		<result property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		</association>
+	</resultMap>
+	
+<!--  	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPictureDTO" id="selectRoomDetailResultMap">
+		<id property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+		<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+		<result property="roomPostDate" column="ROOM_POST_DATE"/>
+		<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+		<result property="empId" column="EMP_ID"/>
+		<result property="pictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+		<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+	</resultMap>  -->
+	
+  	<resultMap type="com.petnolja.semi.admin.common.dto.SelectRoomDetailDTO" id="selectRoomDetailResultMap">
+		<id property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="roomPostTitle" column="ROOM_POST_TITLE"/>
+		<result property="roomPostContents" column="ROOM_POST_CONTENTS"/>
+		<result property="roomPostDate" column="ROOM_POST_DATE"/>
+		<result property="roomPostAble" column="ROOM_POST_ABLE"/>
+		<result property="empId" column="EMP_ID"/>
+		<collection property="adminPictureList" ofType="com.petnolja.semi.admin.common.dto.AdminPictureDTO">
+			<id property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+			<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+			<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+			<result property="adminPictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+			<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+			<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+			<result property="roomPostNo" column="ROOM_POST_NO"/>
+			<result property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+		</collection>
+	</resultMap> 
+
+
+
+
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.PetsitterPostDTO" id="petsitterPostResultMap">
+		<id property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+		<result property="petsitterPostTitle" column="PETSITTER_POST_TITLE"/>
+		<result property="petsitterPostCareer" column="PETSITTER_POST_CAREER"/>
+		<result property="petsitterPostContents" column="PETSITTER_POST_CONTENTS"/>
+		<result property="petsitterCreateDate" column="PETSITTER_POST_CREATEDATE"/>
+		<result property="petsitterModifyDate" column="PETSITTER_POST_MODIFYDATE"/>
+		<result property="petsitterPostCount" column="PETSITTER_POST_COUNT"/>
+		<result property="petsitterPostStatus" column="PETISTTER_POST_STATUS"/>
+		<result property="empId" column="EMP_ID"/>
+		
+		<association property="emp" resultMap="employeeResultMap"/>
+		
+		<collection property="adminPicture" resultMap="adminPictureResultMap"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="employeeResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="no" column="EMP_NO"/>
+		<result property="empEmail" column="EMP_EMAIL"/>
+		<result property="empPhone" column="EMP_PHONE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="bonus" column="BONUS"/>
+		<result property="hireDate" column="HIREDATE"/>
+		<result property="leaveDate" column="LEAVEDATE"/>
+		<result property="dropYN" column="DROP_YN"/>
+		<result property="deptCode" column="DEPT_CODE"/>
+		<result property="jopCode" column="JOB_CODE"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPictureDTO" id="adminPictureResultMap">
+		<id property="adminPictureNo" column="ADMIN_PICTURE_NO"/>
+		<result property="adminPictureName" column="ADMIN_PICTURE_NAME"/>
+		<result property="adminPictureModifyName" column="ADMIN_PICTURE_MODIFYNAME"/>
+		<result property="adminPictureSaveTime" column="ADMIN_PICTURE_SAVETIME"/>
+		<result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/>
+		<result property="adminThumbnailPictureSaveRoute" column="ADMIN_THUMBNAIL_PICTURE_SAVEROUTE"/>
+		<result property="roomPostNo" column="ROOM_POST_NO"/>
+		<result property="petsitterPostNo" column="PETSITTER_POST_NO"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.LocationPostDTO" id="selectLocationPostResultMap">
+	<id property="locationPostNo" column="LOCATION_POST_NO"/>
+  	<result property="locationPostTitle" column="LOCATION_POST_TITLE"/>
+  	<result property="locationPostLtitle" column="LOCATION_POST_LTITLE"/>
+  	<result property="locationOldPost" column="LOCATION_OLD_POST"/>
+  	<result property="locationNewPost" column="LOCATION_NEW_POST"/>
+  	<result property="telePhoneNumber" column="LOCATION_TELEPHONENUMBER"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.CompanyPostDTO" id="selectCompanyIntroResultMap">
+  	<result property="hotelPostTitle" column="HOTEL_POST_TITLE"/>
+  	<result property="hotelPostLtitle" column="HOTEL_POST_LTITLE"/>
+  	<result property="hotelPostContentsFirst" column="HOTEL_POST_CONTENTS"/>
+  	<result property="hotelPostContentsTwo" column="HOTEL_POST_CONTENTS2"/>
+  	<result property="hotelPostContentsThird" column="HOTEL_POST_CONTENTS3"/>
+  	<!-- <result property="adminPictureSaveRoute" column="ADMIN_PICTURE_SAVEROUTE"/> -->
+  	<result property="empId" column="EMP_ID"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.SalesDTO" id="selectSalesListResultMap">
+		<id property="reservationNo" column="RESERVATION_NO"/>
+		<result property="paymentDate" column="PAYMENT_DATE"/>
+		<result property="paymentPrice" column="PAYMENT_PRICE"/>
+		<result property="roomNo" column="ROOM_NO"/>
+	</resultMap>
+	
+	<resultMap type="com.petnolja.semi.member.common.dto.ReservationDTO" id="reservationResultMap">
+		<id property="reservationNo" column="RESERVATION_NO"/>
+		<result property="reservationCheckIn" column="RESERVATION_CHECKIN"/>
+		<result property="reservationCheckOut" column="RESERVATION_CHECKOUT"/>
+		<result property="reservationPrice" column="RESERVATION_PRICE"/>
+		<result property="reservationAmount" column="RESERVATION_AMOUNT"/>
+		<result property="userNo" column="USER_NO"/>
+		<association property="petsitter" resultMap="petsitterReservationResultMap"/>
+		<association property="room" resultMap="roomResultMap"/>
+		<association property="pet" resultMap="petResultMap"/>
+	</resultMap>
+	
+	<select id="selectLocationPost" resultMap="selectLocationPostResultMap">
+		SELECT
+  			    LOCATION_POST_TITLE
+			  , LOCATION_POST_LTITLE
+			  , LOCATION_OLD_POST
+			  , LOCATION_NEW_POST
+			  , LOCATION_TELEPHONENUMBER
+	      FROM LOCATION_POST
+	</select>
+	
+	<select id="selectCompanyPost" resultMap="selectCompanyIntroResultMap">
+ 	    SELECT
+  
+ 				  A.HOTEL_POST_TITLE
+				, A.HOTEL_POST_LTITLE
+				, A.HOTEL_POST_CONTENTS
+				, A.HOTEL_POST_CONTENTS2
+				, A.HOTEL_POST_CONTENTS3
+				, B.ADMIN_PICTURE_SAVEROUTE 
+				, C.EMP_ID
+	     FROM HOTEL_POST A
+         LEFT OUTER JOIN ADMIN_PICTURE B ON (A.HOTEL_POST_PIC_NO = B.ADMIN_PICTURE_NO)
+         LEFT OUTER JOIN EMPLOYEE C ON (A.EMP_ID = C.EMP_ID)
+	</select>
+	<update id="updateLocationPost" parameterType="com.petnolja.semi.admin.common.dto.LocationPostDTO">
+		UPDATE
+               LOCATION_POST 
+	       SET LOCATION_POST_LTITLE = #{locationPostLtitle}
+	         , LOCATION_OLD_POST = #{locationOldPost}
+             , LOCATION_NEW_POST = #{locationNewPost}
+             , LOCATION_TELEPHONENUMBER = #{telePhoneNumber}
+	     WHERE LOCATION_POST_NO = 1 <!--1 생기면 1로 바꿀예정  -->
+	</update> 
+	<update id="updateCompanyPost" parameterType="com.petnolja.semi.admin.common.dto.CompanyPostDTO">
+		UPDATE
+               HOTEL_POST 
+	       SET HOTEL_POST_LTITLE = #{hotelPostLtitle}
+	         , HOTEL_POST_CONTENTS = #{hotelPostContentsFirst}
+             , HOTEL_POST_CONTENTS2 = #{hotelPostContentsTwo}
+             , HOTEL_POST_CONTENTS3 = #{hotelPostContentsThird}
+	     WHERE HOTEL_POST_PIC_NO = 1  <!--1 생기면 1로 바꿀예정  -->
+	</update>
+	<insert id="insertPetsitterPost" parameterType="com.petnolja.semi.admin.common.dto.PetsitterPostDTO">
+		INSERT
+		  INTO PETSITTER_POST A
+		(
+		  A.PETSITTER_POST_NO
+		, A.PETSITTER_POST_TITLE
+		, A.PETSITTER_POST_CAREER
+		, A.PETSITTER_POST_CONTENTS
+		, A.PETSITTER_POST_CREATEDATE
+		, A.PETSITTER_POST_COUNT
+		, A.PETISTTER_POST_STATUS
+		, A.EMP_ID
+		)
+		VALUES
+		(
+		  SEQ_PETSITTER_POST_NO.NEXTVAL
+		, #{petsitterPostTitle}
+		, #{petsitterPostCareer}
+		, #{petsitterPostContents}
+		, SYSDATE
+		, 0
+		, 'Y'
+		, #{empId}
+		)
+	</insert>
+	
+	<insert id="insertAdminPicture" parameterType="com.petnolja.semi.admin.common.dto.AdminPictureDTO">
+		INSERT
+		  INTO ADMIN_PICTURE A
+		(
+		  A.ADMIN_PICTURE_NO
+		, A.ADMIN_PICTURE_NAME
+		, A.ADMIN_PICTURE_MODIFYNAME
+		, A.ADMIN_PICTURE_SAVETIME
+		, A.ADMIN_PICTURE_SAVEROUTE
+		, A.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+		, A.PETSITTER_POST_NO
+		)
+		VALUES
+		(
+		  SEQ_ADMIN_PICTURE_NO.NEXTVAL
+		, #{adminPictureName}
+		, #{adminPictureModifyName}
+		, SYSDATE
+		, #{adminPictureSaveRoute}
+		, #{adminThumbnailPictureSaveRoute}
+		, SEQ_PETSITTER_POST_NO.CURRVAL
+		)
+	</insert>
+	
+	<select id="selectRoomList" resultMap="selectRoomListResultMap">
+		SELECT
+		       A.ROOM_POST_NO
+		     , A.ROOM_POST_TITLE
+		     , A.ROOM_POST_CONTENTS
+		     , A.ROOM_POST_DATE
+		     , A.ROOM_POST_ABLE
+		     , B.EMP_NAME
+		  FROM ROOM_POST A
+          JOIN EMPLOYEE B ON (A.EMP_ID = B.EMP_ID)
+         ORDER BY 1 DESC
+	</select>
+	
+	<select id="selectRoomDetail" parameterType="string" resultMap="selectRoomDetailResultMap">
+ 		SELECT
+		       A.ROOM_POST_NO
+		     , A.ROOM_POST_TITLE
+		     , A.ROOM_POST_CONTENTS
+		     , A.ROOM_POST_DATE
+		     , A.ROOM_POST_ABLE
+		     , A.EMP_ID
+             , B.ADMIN_PICTURE_NO
+             , B.ADMIN_PICTURE_SAVEROUTE
+             , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+		  FROM ROOM_POST A
+          LEFT OUTER JOIN ADMIN_PICTURE B ON (A.ROOM_POST_NO = B.ROOM_POST_NO)
+         WHERE A.ROOM_POST_NO = #{roomPostNo}
+	</select>
+	
+	
+<!-- 	<update id="updateRoomPost" parameterType="com.petnolja.semi.admin.common.dto.RoomPostDTO">
+		UPDATE
+	           ROOM_POST A
+	       SET A.ROOM_POST_TITLE = #{roomPostTitle}
+	         , A.ROOM_POST_CONTENTS = #{roomPostContents}
+	         , A.ROOM_POST_ABLE = #{roomPostAble}
+	     WHERE A.ROOM_POST_NO = #{roomPostNo}
+	</update> -->
+	
+	<insert id="inserRoomPost" parameterType="com.petnolja.semi.admin.common.dto.RoomPostDTO">
+		INSERT
+		  	   INTO ROOM_POST A
+			 (
+			   ROOM_POST_NO
+			 , ROOM_POST_TITLE
+			 , ROOM_POST_CONTENTS
+			 , ROOM_POST_DATE
+			 , ROOM_POST_ABLE
+			 , EMP_ID
+			 )
+			 VALUES
+			 (
+			   SEQ_ROOM_POST_NO.NEXTVAL
+			 , #{roomPostTitle}  
+			 , #{roomPostContents}
+			 , SYSDATE
+			 , #{roomPostAble}
+			 , 20220505
+			 )
+	
+	</insert>
+		
+	<insert id="insertThumbnailContent" >
+		INSERT
+		  	   INTO ROOM_POST
+			 (
+			   ROOM_POST_NO
+			 , ROOM_POST_TITLE
+			 , ROOM_POST_CONTENTS
+			 , ROOM_POST_DATE
+			 , ROOM_POST_ABLE
+			 , EMP_ID
+			 )
+			 VALUES
+			 (
+			   SEQ_ROOM_POST_NO.NEXTVAL
+			 , #{roomPostTitle}
+			 , #{roomPostContents}
+			 , SYSDATE
+			 , #{roomPostAble}
+			 , #{empId}
+			 )
+			 <!-- <selectKey keyProperty="roomPostNo" resultType="_int" order="AFTER">
+        	      SELECT
+        	             SEQ_ROOM_POST_NO.CURRVAL
+        	        FROM DUAL 
+        </selectKey> -->
+	</insert>
+	
+	<insert id="insertAttachment">
+		INSERT
+			   INTO ADMIN_PICTURE
+			 (
+			   ADMIN_PICTURE_NO
+			 , ADMIN_PICTURE_NAME
+			 , ADMIN_PICTURE_MODIFYNAME
+			 , ADMIN_PICTURE_SAVETIME
+			 , ADMIN_PICTURE_SAVEROUTE
+			 , ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+			 , ROOM_POST_NO
+			 , PETSITTER_POST_NO
+			 )
+			 VALUES
+			 (
+			   SEQ_ADMIN_PICTURE_NO.NEXTVAL
+			 , #{adminPictureName}
+			 , #{adminPictureModifyName}
+			 , SYSDATE
+			 , #{adminPictureSaveRoute}
+			 , #{adminThumbnailPictureSaveRoute}
+			 , SEQ_ROOM_POST_NO.CURRVAL
+			 , NULL
+			 )
+	</insert>
+	
+	<update id="UpdateRoomPost"> 
+	</update>
+	
+	
+	<update id="updateAttachment">
+   		UPDATE
+               ADMIN_PICTURE
+           SET ADMIN_PICTURE_NAME = #{adminPictureName}
+             , ADMIN_PICTURE_MODIFYNAME = #{adminPictureModifyName}
+             , ADMIN_PICTURE_SAVETIME = SYSDATE
+             , ADMIN_PICTURE_SAVEROUTE = #{adminPictureSaveRoute}
+             , ADMIN_THUMBNAIL_PICTURE_SAVEROUTE = #{adminThumbnailPictureSaveRoute}
+         WHERE ADMIN_PICTURE_NO = 1;
+	</update>
+
+	<select id="selectPetsitterPost" parameterType="_int" resultMap="petsitterPostResultMap">
+		SELECT
+			   A.PETSITTER_POST_NO
+			 , A.PETSITTER_POST_TITLE
+			 , A.PETSITTER_POST_CAREER
+			 , A.PETSITTER_POST_CONTENTS
+			 , A.PETSITTER_POST_CREATEDATE
+			 , A.PETSITTER_POST_MODIFYDATE
+			 , A.PETSITTER_POST_COUNT
+			 , A.EMP_ID
+			 , C.EMP_NAME
+			 , B.ADMIN_PICTURE_NAME
+			 , B.ADMIN_PICTURE_MODIFYNAME
+			 , B.ADMIN_PICTURE_SAVEROUTE
+			 , B.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE
+		  FROM PETSITTER_POST A
+		  JOIN ADMIN_PICTURE B ON(A.PETSITTER_POST_NO = B.PETSITTER_POST_NO)
+		  JOIN EMPLOYEE C ON(A.EMP_ID = C.EMP_ID)
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+		   AND A.PETISTTER_POST_STATUS = 'Y'
+	</select>
+	
+	<update id="updatetPetsitterPost" parameterType="com.petnolja.semi.admin.common.dto.PetsitterPostDTO">
+		UPDATE
+			   PETSITTER_POST A
+		   SET A.PETSITTER_POST_MODIFYDATE = SYSDATE
+		     , A.EMP_ID = #{empId}
+		     , A.PETSITTER_POST_TITLE = #{petsitterPostTitle}
+		     , A.PETSITTER_POST_CAREER = #{petsitterPostCareer}
+		     , A.PETSITTER_POST_CONTENTS = #{petsitterPostContents}
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+	</update>
+	
+	<update id="updateAdminPicture" parameterType="com.petnolja.semi.admin.common.dto.AdminPictureDTO">
+		UPDATE
+			   ADMIN_PICTURE A
+		   SET A.ADMIN_PICTURE_NAME = #{adminPictureName}
+		     , A.ADMIN_PICTURE_MODIFYNAME = #{adminPictureModifyName}
+	   	     , A.ADMIN_PICTURE_SAVETIME = SYSDATE
+		     , A.ADMIN_PICTURE_SAVEROUTE = #{adminPictureSaveRoute}
+		     , A.ADMIN_THUMBNAIL_PICTURE_SAVEROUTE = #{adminThumbnailPictureSaveRoute}
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+	</update>
+	
+	<delete id="deletePetsitterPost" parameterType="_int">
+		DELETE
+		  FROM PETSITTER_POST A
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+	</delete>
+	
+	<delete id="deletePetsitterPicture">
+		DELETE
+		  FROM ADMIN_PICTURE A
+		 WHERE A.PETSITTER_POST_NO = #{petsitterPostNo}
+	</delete>
+	
+	<delete id="deleteRoomPicture">
+		DELETE 
+		  FROM ADMIN_PICTURE 
+		 WHERE ROOM_POST_NO = #{roomPostNo}
+	</delete>
+	
+	<delete id="deleteRoomPost">
+		DELETE 
+		  FROM ROOM_POST 
+		 WHERE ROOM_POST_NO = #{roomPostNo}
+	</delete>
+	
+	<select id ="selectSalesList" resultMap = "selectSalesListResultMap"> 
+		SELECT
+			   A.RESERVATION_NO
+			 , A.PAYMENT_DATE
+			 , A.PAYMENT_PRICE
+			 , B.ROOM_NO
+		  FROM PAYMENT A
+		  JOIN RESERVATION B ON(A.RESERVATION_NO = B.RESERVATION_NO)
+	</select>
+	
+	<!-- <select id ="selectSalesListDetail" resultMap = "selectSalesListDetailResultMap"> 
+		SELECT
+			   A.RESERVATION_NO
+			 , A.RESERVATION_CHECKIN
+			 , A.RESERVATION_CHECKOUT
+			 , A.RESERVATION_PRICE
+			 , A.RESERVATION_AMOUNT
+			 , C.EMP_ID
+			 , A.ROOM_NO
+			 , B.ROOM_NO
+			 , B.ROOM_NAME
+			 , B.ROOM_PRICE
+		  FROM RESERVATION A
+		  JOIN ROOM B ON(A.ROOM_NO = B.ROOM_NO)
+		  JOIN PETSITTER C ON(A.EMP_ID = C.EMP_ID)
+		 WHERE A.RESERVATION_NO = #{reservationNo}
+		 ORDER BY A.RESERVATION_CHECKOUT DESC
+	</select> -->
+	
+	<select id ="selectSalesListByDate" parameterType="string" resultMap = "selectSalesListResultMap"> 
+		SELECT
+			   A.RESERVATION_NO
+			 , A.PAYMENT_DATE
+			 , A.PAYMENT_PRICE
+			 , B.ROOM_NO
+		  FROM PAYMENT A
+		  JOIN RESERVATION B ON(A.RESERVATION_NO = B.RESERVATION_NO)
+		  WHERE PAYMENT_DATE  =TO_DATE(REPLACE(#{paymentDate}, '-', '/'))
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

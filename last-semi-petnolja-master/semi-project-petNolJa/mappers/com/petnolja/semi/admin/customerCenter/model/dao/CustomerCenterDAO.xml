@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.admin.customerCenter.model.dao.CustomerCenterDAO">
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPostAndEmployeeDTO" id="adminPostResultMap">
+		<id property="adminpostNo" column="ADMIN_POST_NO"/>
+		<result property="adminpostTitle" column="ADMIN_POST_TITLE"/>
+		<result property="adminpostContents" column="ADMIN_POST_CONTENTS"/>
+		<result property="adminpostDate" column="ADMIN_POST_DATE"/>
+		<result property="adminpostUpdate" column="ADMIN_POST_UPDATE"/>
+		<result property="adminEventExpire" column="ADMIN_EVENT_EXPIRE"/>
+		<result property="adminCategoryNo" column="ADMIN_CATEGORY_NO"/>
+		
+		<association property="emp" resultMap="empResultMap"/>
+	</resultMap>
+	<resultMap type="com.petnolja.semi.admin.common.dto.EmployeeDTO" id="empResultMap">
+		<id property="empId" column="EMP_ID"/>
+		<result property="empName" column="EMP_NAME"/>
+	</resultMap>
+	
+	<select id="selectAllAdminPost" parameterType="_int" resultMap="adminPostResultMap">
+		SELECT
+			   A.ADMIN_POST_NO
+			 , A.ADMIN_POST_TITLE
+			 , A.ADMIN_POST_CONTENTS
+			 , A.ADMIN_POST_DATE
+			 , A.ADMIN_POST_UPDATE
+			 , A.ADMIN_EVENT_EXPIRE
+			 , A.ADMIN_CATEGORY_NO
+			 , A.EMP_ID
+			 , B.EMP_NAME
+		  FROM ADMIN_POST A
+		  JOIN EMPLOYEE B ON (A.EMP_ID = B.EMP_ID)
+		 WHERE A.ADMIN_CATEGORY_NO = #{categoryNo}
+		 ORDER BY ADMIN_POST_NO DESC
+	</select>
+	
+	<insert id="inserAdminPost" parameterType="com.petnolja.semi.admin.common.dto.AdminPostDTO">
+		INSERT
+		  INTO ADMIN_POST A
+		(
+		  A.ADMIN_POST_NO
+		, A.ADMIN_POST_TITLE
+		, A.ADMIN_POST_CONTENTS
+		, A.ADMIN_POST_DATE
+		, A.ADMIN_EVENT_EXPIRE
+		, A.ADMIN_CATEGORY_NO
+		, A.EMP_ID
+		)
+		VALUES
+		(
+		  SEQ_ADMIN_POST_NO.NEXTVAL
+		, #{adminpostTitle}
+		, #{adminpostContents}
+		, SYSDATE
+		<if test="adminEventExpire != null">
+		, #{adminEventExpire}
+		</if>
+		<if test="adminEventExpire == null">
+		, NULL
+		</if>
+		, #{adminCategoryNo}
+		, #{empId}
+		)
+	</insert>
+	
+	<select id="selectDetailNotice" parameterType="map" resultMap="adminPostResultMap">
+		SELECT
+			   A.ADMIN_POST_NO
+			 , A.ADMIN_POST_TITLE
+			 , A.ADMIN_POST_CONTENTS
+			 , A.ADMIN_POST_DATE
+			 , A.ADMIN_POST_UPDATE
+			 , A.ADMIN_EVENT_EXPIRE
+			 , A.ADMIN_CATEGORY_NO
+			 , A.EMP_ID
+			 , B.EMP_NAME
+		  FROM ADMIN_POST A
+		  JOIN EMPLOYEE B ON (A.EMP_ID = B.EMP_ID)
+		 WHERE A.ADMIN_POST_NO = #{adminPostNo}
+		 ORDER BY ADMIN_POST_NO DESC
+	</select>
+
+	<delete id="deleteAdminPost" parameterType="_int">
+		DELETE
+		  FROM ADMIN_POST A
+		 WHERE A.ADMIN_POST_NO = #{noticeNo}
+	</delete>
+	
+	<select id="selectDetailNoticea" parameterType="_int" resultMap="adminPostResultMap">
+		SELECT
+			   A.ADMIN_POST_NO
+			 , A.ADMIN_POST_TITLE
+			 , A.ADMIN_POST_CONTENTS
+			 , A.ADMIN_POST_DATE
+			 , A.ADMIN_POST_UPDATE
+			 , A.ADMIN_EVENT_EXPIRE
+			 , A.ADMIN_CATEGORY_NO
+			 , A.EMP_ID
+			 , B.EMP_NAME
+		  FROM ADMIN_POST A
+		  JOIN EMPLOYEE B ON (A.EMP_ID = B.EMP_ID)
+		 WHERE A.ADMIN_POST_NO = #{noticeNo}
+	</select>
+	
+	<update id="UpdateAdminPost" parameterType="com.petnolja.semi.admin.common.dto.AdminPostAndEmployeeDTO">
+		UPDATE
+			   ADMIN_POST A
+		   SET A.ADMIN_POST_TITLE = #{adminpostTitle}
+		     , A.ADMIN_POST_CONTENTS = #{adminpostContents}
+		     , A.ADMIN_POST_UPDATE = SYSDATE
+		 WHERE A.ADMIN_POST_NO = #{adminpostNo}
+	</update>
+</mapper>

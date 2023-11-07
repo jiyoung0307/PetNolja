@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.admin.employee.model.dao.MemberSelectDAO">
+	<!-- resultmap이랑 id명 같게 해주기  -->
+	<resultMap type="com.petnolja.semi.member.common.dto.MemberDTO" id="memberSelectResultMap">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberPwd" column="MEMBER_PWD"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberBirth" column="MEMBER_BIRTH"/>
+		<result property="memberPhone" column="MEMBER_PHONE"/>
+		<result property="memberEmail" column="MEMBER_EMAIL"/>
+		<result property="memberPoint" column="MEMBER_POINT"/>
+		<result property="gradeNo" column="GRADE_NO"/>		
+	</resultMap>
+	
+	<select id="selectMember" resultMap="memberSelectResultMap">
+	<!-- resultmap이랑 id명 같게 해주기  -->
+		SELECT
+			   A.MEMBER_NO
+             , A.MEMBER_ID
+   			 , A.MEMBER_PWD
+   			 , A.MEMBER_NAME
+   			 , A.MEMBER_BIRTH
+   			 , A.MEMBER_PHONE
+   			 , A.MEMBER_EMAIL
+   			 , A.MEMBER_POINT
+   			 , A.GRADE_NO
+   	     FROM MEMBER A
+	</select>
+</mapper>

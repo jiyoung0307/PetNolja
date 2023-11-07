@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.petnolja.semi.admin.customer.model.dao.DormanSelectDAO">
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.DormanMemberDTO" id="dormanselectResultMap">
+		<id property="dormanMemberNo" column="DORMAN_MEMBER_NO"/>
+		<result property="dormanId" column="DORMAN_ID"/>
+		<result property="dormanPwd" column="DORMAN_PWD"/>
+		<result property="dormanName" column="DORMAN_NAME"/>
+		<result property="dormanBirth" column="DORMAN_BIRTH"/>
+		<result property="dormanNumber" column="DORMAN_NUMBER"/>
+		<result property="dormanEmail" column="DORMAN_EMAIL"/>
+		<result property="dormanAccprice" column="DORMAN_ACCPRICE"/>
+	</resultMap>
+	
+	<select id="selectDorman" resultMap="dormanselectResultMap">
+		SELECT
+      		   A.DORMAN_MEMBER_NO
+     		 , A.DORMAN_ID
+   		     , A.DORMAN_PWD
+    		 , A.DORMAN_NAME
+   		 	 , A.DORMAN_BIRTH
+     		 , A.DORMAN_NUMBER
+    		 , A.DORMAN_EMAIL
+    		 , A.DORMAN_ACCPRICE
+  		  FROM DORMAN_MEMBER A
+	</select>
+</mapper>

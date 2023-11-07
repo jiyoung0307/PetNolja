@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.admin.customerCenter.model.dao.AnswerDAO">
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.QuestionDTO" id="questionResultMap">
+		<id property="questionNo" column="QUESTION_NO"/>
+		<result property="questionTitle" column="QUESTION_TITLE"/>
+		<result property="questionContents" column="QUESTION_CONTENTS"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		
+		<collection property="answer" resultMap="adminAnswerResultMap"/>
+	
+	</resultMap> 
+	
+	<resultMap type="com.petnolja.semi.admin.common.dto.AnswerDTO" id="adminAnswerResultMap">
+		<id property="answerNo" column="ANSWER_NO"/>
+		<result property="answerTitle" column="ANSWER_TITLE"/>
+		<result property="answerContents" column="ANSWER_CONTENTS"/>
+		<result property="empId" column="EMP_ID"/>
+		<result property="questionNo" column="QUESTION_NO"/>
+	</resultMap>
+	
+	<select id="selectAllQuestion" resultMap="questionResultMap">
+		SELECT
+    		   A.QUESTION_NO
+     	     , A.QUESTION_TITLE
+     		 , A.QUESTION_CONTENTS
+     		 , B.ANSWER_TITLE
+     		 , DECODE((B.QUESTION_NO), NULL, 'N', 'Y')
+     		 , B.ANSWER_CONTENTS
+     		 , C.EMP_NAME
+     	  FROM QUESTION A
+     	  LEFT OUTER JOIN ANSWER B ON(A.QUESTION_NO = B.QUESTION_NO)
+     	  LEFT OUTER JOIN EMPLOYEE C ON(B.EMP_ID = C.EMP_ID)
+	</select>
+	
+<!-- 	<select>
+		SELECT
+    		   A.QUESTION_NO
+     		 , A.QUESTION_TITLE
+     		 , A.QUESTION_CONTENTS
+     		 , DECODE((B.QUESTION_NO), NULL, 'N', 'Y')
+     		 , B.ANSWER_TITLE
+     		 , B.ANSWER_CONTENTS
+     		 , C.EMP_NAME
+     		 FROM QUESTION A
+     		 LEFT OUTER JOIN ANSWER B ON(A.QUESTION_NO = B.QUESTION_NO)
+     		 LEFT OUTER JOIN EMPLOYEE C ON(B.EMP_ID = C.EMP_ID)
+     		WHERE A.QUESTION_NO = #{questionNo}	
+	</select> -->
+	
+	<insert id="answerInsert" parameterType="com.petnolja.semi.admin.common.dto.AnswerDTO">
+		INSERT
+ 			INTO ANSWER
+		(
+		    ANSWER_NO
+		  , ANSWER_TITLE
+		  , ANSWER_CONTENTS
+		  , EMP_ID
+		  , QUESTION_NO
+		 )
+		  VALUES
+		(
+		  SEQ_QUESTION_NO,
+		  #{answerNo},
+		  #{answerTitle},
+		  #{answerContents},
+		  #{empId},
+		  #{questionNo}
+		)
+	</insert>
+	
+	<update id="answerUpdate" parameterType="com.petnolja.semi.admin.common.dto.AnswerDTO">
+		UPDATE
+     		   ANSWER
+  		   SET ANSWER_CONTENTS = #{answerContents}
+ 		 WHERE QUESTION_NO = #{questionNo}
+	</update>
+</mapper>

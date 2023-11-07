@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.post.model.dao.FaqSelectDAO">
+
+	<resultMap type="com.petnolja.semi.admin.common.dto.AdminPostDTO" id="faqResultMap">
+		<id property="adminpostNo" column="ADMIN_POST_NO"/>
+		<result property="adminpostTitle" column="ADMIN_POST_TITLE"/>
+		<result property="adminpostContents" column="ADMIN_POST_CONTENTS"/>
+		<result property="adminpostDate" column="ADMIN_POST_DATE"/>
+		<result property="adminpostUpdate" column="ADMIN_POST_UPDATE"/>
+		<result property="adminEventExpire" column="ADMIN_EVENT_EXPIRE"/>
+		<result property="adminCategoryNo" column="ADMIN_CATEGORY_NO"/>
+		<result property="empId" column="EMP_ID"/>
+	</resultMap>
+	
+	<select id="selectFaq" resultMap="faqResultMap">
+   		SELECT
+      	       A.ADMIN_POST_NO
+      	 	 , A.ADMIN_POST_TITLE
+      		 , A.ADMIN_POST_CONTENTS
+      		 , A.ADMIN_POST_DATE
+     		 , A.ADMIN_POST_UPDATE
+      		 , A.ADMIN_EVENT_EXPIRE
+      		 , A.ADMIN_CATEGORY_NO
+      		 , A.EMP_ID
+  		  FROM ADMIN_POST A
+ 		 WHERE A.ADMIN_CATEGORY_NO = 2
+	</select>
+	
+	<select id="faqDetail" parameterType="string" resultMap="faqResultMap">
+   		SELECT
+      	       A.ADMIN_POST_NO
+      	 	 , A.ADMIN_POST_TITLE
+      		 , A.ADMIN_POST_CONTENTS
+      		 , A.ADMIN_POST_DATE
+     		 , A.ADMIN_POST_UPDATE
+      		 , A.ADMIN_EVENT_EXPIRE
+      		 , A.ADMIN_CATEGORY_NO
+      		 , A.EMP_ID
+  		  FROM ADMIN_POST A
+		 WHERE ADMIN_POST_NO = #{ faqNo }
+	</select>
+</mapper>

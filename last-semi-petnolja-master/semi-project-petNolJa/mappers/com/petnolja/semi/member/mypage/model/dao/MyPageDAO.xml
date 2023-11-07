@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.petnolja.semi.member.mypage.model.dao.MyPageDAO">
+  
+    <resultMap type="com.petnolja.semi.member.common.dto.SelectAllReviewDTO" id="selectAllReviewLogResultMap">
+  	<id property="reviewNo" column="REVIEW_NO"/>
+  	<result property="memberId" column="MEMBER_ID"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="memberNo" column="MEMBER_NO"/>
+  </resultMap>
+  
+    <resultMap type="com.petnolja.semi.member.common.dto.SelectDetailReviewDTO" id="selectDetailReviewLogResultMap">
+  	<id property="reviewNo" column="REVIEW_NO"/>
+  	<result property="reviewRate" column="REVIEW_RATE"/>
+  	<result property="memberId" column="MEMBER_ID"/>
+  	<result property="gradeName" column="GRADE_NAME"/>
+  	<result property="reviewDate" column="REVIEW_DATE"/>
+  	<result property="checkIn" column="RESERVATION_CHECKIN"/>
+  	<result property="checkOut" column="RESERVATION_CHECKOUT"/>
+  	<result property="reviewContents" column="REVIEW_CONTENTS"/>
+  	<result property="userPicSaveRoute" column="USER_PIC_SAVEROUTE"/>
+  	<result property="roomName" column="ROOM_NAME"/>
+  	<result property="empName" column="EMP_NAME"/>
+  </resultMap>
+  
+  <resultMap type="com.petnolja.semi.member.common.dto.MemberDTO" id="checkUserresultMap">
+  	<id property="memberNo" column="MEMBER_NO"/>
+  	<result property="memberPwd" column="MEMBER_PWD"/>
+  </resultMap>
+  
+    <update id="updateMemberInfo" parameterType="map" >
+  	   UPDATE
+	          MEMBER A
+	      SET A.MEMBER_PHONE = #{memberPhone}
+	        , A.MEMBER_EMAIL = #{memberEmail}
+	    WHERE A.MEMBER_NO = #{memberNo}
+  </update>
+  
+  <delete id="deletePicture" parameterType="string">
+  	  DELETE
+	    FROM USER_PICTURE
+	   WHERE REVIEW_NO = #{reviewNo}
+  </delete>
+  <delete id="deleteReview" parameterType="string">
+  	  DELETE
+	    FROM REVIEW
+	   WHERE REVIEW_NO = #{reviewNo}
+  </delete>
+  
+    <select id="selectReviewLog" parameterType="map" resultMap="selectAllReviewLogResultMap">
+     SELECT
+            A.REVIEW_NO 
+          , A.REVIEW_CONTENTS
+       	  , A.REVIEW_RATE
+	      , C.MEMBER_ID
+	      , C.MEMBER_NO
+	   FROM REVIEW A
+	   JOIN RESERVATION B ON (A.RESERVATION_NO = B.RESERVATION_NO)
+	   JOIN MEMBER C ON (B.USER_NO = C.MEMBER_NO)
+	  WHERE A.CATEGORY_NO = 2
+	    AND MEMBER_NO = #{memberNo}
+	  ORDER BY A.REVIEW_DATE DESC
+  </select>
+  
+  <insert id="insertReview" parameterType="hashmap">
+  	INSERT
+      INTO REVIEW
+      (
+	    REVIEW_NO
+	  , REVIEW_CONTENTS
+	  , REVIEW_DATE
+	  , REVIEW_RATE
+	  , RESERVATION_NO
+	  , CATEGORY_NO
+	  )
+	  VALUES
+	  (
+	    SEQ_REVIEW_NO.NEXTVAL
+	  , #{reviewText}
+	  , SYSDATE
+	  , #{rating}
+	  , 6
+	  , 2
+	  )
+  </insert>
+  
+
+</mapper>
